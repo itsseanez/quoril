@@ -57,5 +57,3 @@ Quoril provides:
 - **Database:** PostgreSQL
 - **AI Layer:** OpenAI / Claude API
 - **Deployment:** Vercel 
-
-
