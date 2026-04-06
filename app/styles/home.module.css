@@ -1,0 +1,591 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.serif {
+  font-family: 'Instrument Serif', serif;
+}
+
+/* ── Navbar ── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+.navScrolled {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-color: var(--border);
+}
+
+.navBrand {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.navLinks a {
+  font-size: 14px;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+
+.navLinks a:hover {
+  color: var(--ink);
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Buttons ── */
+.btnGhost {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.btnGhost:hover {
+  background: var(--surface);
+}
+
+.btnPrimary {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  font-family: inherit;
+  border: none;
+  letter-spacing: 0.01em;
+}
+
+.btnPrimary:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.btnPrimary:active {
+  transform: translateY(0);
+}
+
+.btnHeroPrimary {
+  font-size: 15px;
+  font-weight: 500;
+  padding: 13px 28px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.2s, transform 0.15s;
+  font-family: inherit;
+  border: none;
+}
+
+.btnHeroPrimary:hover {
+  opacity: 0.82;
+  transform: translateY(-2px);
+}
+
+.btnHeroSecondary {
+  font-size: 15px;
+  font-weight: 400;
+  padding: 13px 28px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+
+.btnHeroSecondary:hover {
+  background: var(--surface);
+  border-color: rgba(0, 0, 0, 0.14);
+  transform: translateY(-2px);
+}
+
+.btnCta {
+  font-size: 15px;
+  font-weight: 500;
+  padding: 14px 32px;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  transition: opacity 0.2s, transform 0.15s;
+  font-family: inherit;
+  border: none;
+}
+
+.btnCta:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+/* ── Mobile menu ── */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger svg {
+  display: block;
+}
+
+.mobileMenu {
+  display: none;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background: color-mix(in srgb, var(--paper) 97%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px 24px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobileMenuOpen {
+  display: flex;
+}
+
+.mobileMenu a {
+  font-size: 16px;
+  padding: 10px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.mobileMenu a:last-child {
+  border: none;
+}
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  padding: 120px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201, 112, 58, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(201, 112, 58, 0.04) 0%, transparent 60%);
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 50%, black 30%, transparent 100%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  background: rgba(201, 112, 58, 0.09);
+  border: 1px solid rgba(201, 112, 58, 0.22);
+  border-radius: 100px;
+  padding: 5px 14px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+  animation-delay: 0.05s;
+}
+
+.heroH1 {
+  font-size: clamp(48px, 7vw, 76px);
+  line-height: 1.06;
+  letter-spacing: -2.5px;
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 22px;
+  animation: fadeUp 0.7s ease both;
+  animation-delay: 0.15s;
+}
+
+.heroH1 em {
+  font-style: italic;
+  color: var(--accent-warm);
+}
+
+.heroSub {
+  font-size: clamp(15px, 2vw, 17px);
+  color: var(--ink-3);
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  font-weight: 300;
+  animation: fadeUp 0.7s ease both;
+  animation-delay: 0.28s;
+}
+
+.heroCtas {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.7s ease both;
+  animation-delay: 0.40s;
+}
+
+/* ── Sections common ── */
+.section {
+  padding: 100px 24px;
+}
+
+.sectionInner {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+
+.sectionHeading {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4.5vw, 50px);
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  color: var(--ink);
+  margin-bottom: 56px;
+}
+
+/* ── Features ── */
+.featuresSection {
+  padding: 100px 24px;
+  background: var(--paper);
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.featureCard {
+  padding: 28px 26px 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--paper);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  cursor: default;
+}
+
+.featureCard:hover {
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-3px);
+}
+
+.featureIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-warm);
+  margin-bottom: 20px;
+}
+
+.featureCard h3 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 9px;
+  color: var(--ink);
+}
+
+.featureCard p {
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ── How it works ── */
+.howItWorksSection {
+  padding: 100px 24px;
+  background: var(--surface);
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.stepsGrid::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(33.33% - 1px);
+  right: calc(33.33% - 1px);
+  height: 1px;
+  background: var(--border);
+  pointer-events: none;
+}
+
+.step {
+  padding: 0 32px 0 0;
+  position: relative;
+}
+
+.step:last-child {
+  padding-right: 0;
+}
+
+.stepNumber {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-bottom: 20px;
+}
+
+.step h3 {
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.step p {
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ── CTA section ── */
+.ctaSection {
+  background: var(--ink);
+  padding: 100px 24px;
+}
+
+.ctaInner {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ctaInner h2 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  color: var(--paper);
+  margin-bottom: 16px;
+}
+
+.ctaInner p {
+  font-size: 16px;
+  color: color-mix(in srgb, var(--paper) 50%, transparent);
+  margin-bottom: 36px;
+  font-weight: 300;
+}
+
+/* ── Footer ── */
+.footer {
+  padding: 36px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+}
+
+.footerInner {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footerBrand {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.footerLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.footerLinks a {
+  font-size: 13px;
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footerLinks a:hover {
+  color: var(--ink-2);
+}
+
+.footerCopy {
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* ── Divider ── */
+.dividerWrap {
+  padding: 0 24px;
+}
+
+.divider {
+  max-width: 1040px;
+  margin: 0 auto;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .navLinks,
+  .navActions {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .stepsGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .stepsGrid::before {
+    display: none;
+  }
+
+  .step {
+    padding-right: 0;
+  }
+
+  .section,
+  .featuresSection,
+  .howItWorksSection,
+  .ctaSection {
+    padding: 72px 20px;
+  }
+
+  .hero {
+    padding: 100px 20px 72px;
+  }
+}
