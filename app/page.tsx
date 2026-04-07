@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles/home.module.css";
+import { SignUpButton, SignInButton } from '@clerk/nextjs'
 
 const BriefcaseIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -166,8 +167,12 @@ export default function HomePage() {
         </div>
 
         <div className={styles.navActions}>
-          <Link href="/login" className={styles.btnGhost}>Log in</Link>
-          <Link href="/sign-up" className={styles.btnPrimary}>Get started</Link>
+          <SignInButton mode="modal">
+            <button className={styles.btnGhost}>Log in</button>
+          </SignInButton>
+          <SignUpButton mode="modal">
+            <button className={styles.btnPrimary}>Get started</button>
+          </SignUpButton>
         </div>
 
         <button
@@ -197,8 +202,16 @@ export default function HomePage() {
         <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
         <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
         <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
-        <Link href="/login" onClick={() => setMenuOpen(false)}>Log in</Link>
-        <Link href="/sign-up" onClick={() => setMenuOpen(false)}>Get started →</Link>
+        <SignInButton mode="modal">
+          <button className={styles.mobileMenuLink} onClick={() => setMenuOpen(false)}>
+            Log in
+          </button>
+        </SignInButton>
+        <SignUpButton mode="modal">
+          <button className={styles.mobileMenuLink} onClick={() => setMenuOpen(false)}>
+            Get started →
+          </button>
+        </SignUpButton>
       </div>
 
       {/* ── Hero ── */}
@@ -219,9 +232,9 @@ export default function HomePage() {
             ranks real opportunities against your skills, and helps you track every application — all in one place.
           </p>
           <div className={styles.heroCtas}>
-            <Link href="/sign-up" className={styles.btnHeroPrimary}>
-              Get started <ArrowRight />
-            </Link>
+            <SignUpButton mode="modal">
+            <button className={styles.btnHeroPrimary}>Get started <ArrowRight /></button>
+            </SignUpButton>
             <a href="#features" className={styles.btnHeroSecondary}>
               View jobs
             </a>
@@ -288,9 +301,9 @@ export default function HomePage() {
           <div className={styles.ctaInner}>
             <h2>Start applying smarter today</h2>
             <p>No noise. No guesswork. Just the right jobs, ranked for you.</p>
-            <Link href="/sign-up" className={styles.btnCta}>
-              Create free account <ArrowRight />
-            </Link>
+            <SignUpButton mode="modal">
+            <button className={styles.btnCta}>Create free account <ArrowRight /></button>
+            </SignUpButton>
           </div>
         </RevealSection>
       </section>

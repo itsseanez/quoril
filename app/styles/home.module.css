@@ -216,6 +216,26 @@ body {
   border: none;
 }
 
+.mobileMenuLink {
+  font-size: 16px;
+  padding: 10px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  background: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-align: left;
+  width: 100%;
+}
+
+.mobileMenuLink:last-child {
+  border-bottom: none;
+}
+
 /* ── Hero ── */
 .hero {
   min-height: 100vh;
