@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import styles from "./styles/home.module.css";
+import styles from "./home.module.css";
 import { SignUpButton, SignInButton } from '@clerk/nextjs'
 
 const BriefcaseIcon = () => (
