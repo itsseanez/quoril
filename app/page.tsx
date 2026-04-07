@@ -170,7 +170,7 @@ export default function HomePage() {
           <SignInButton mode="modal">
             <button className={styles.btnGhost}>Log in</button>
           </SignInButton>
-          <SignUpButton mode="modal">
+          <SignUpButton mode="modal" forceRedirectUrl="/onboarding">
             <button className={styles.btnPrimary}>Get started</button>
           </SignUpButton>
         </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
             Log in
           </button>
         </SignInButton>
-        <SignUpButton mode="modal">
+        <SignUpButton mode="modal" forceRedirectUrl="/onboarding">
           <button className={styles.mobileMenuLink} onClick={() => setMenuOpen(false)}>
             Get started →
           </button>
@@ -232,7 +232,7 @@ export default function HomePage() {
             ranks real opportunities against your skills, and helps you track every application — all in one place.
           </p>
           <div className={styles.heroCtas}>
-            <SignUpButton mode="modal">
+            <SignUpButton mode="modal" forceRedirectUrl="/onboarding">
             <button className={styles.btnHeroPrimary}>Get started <ArrowRight /></button>
             </SignUpButton>
             <a href="#features" className={styles.btnHeroSecondary}>
@@ -301,7 +301,7 @@ export default function HomePage() {
           <div className={styles.ctaInner}>
             <h2>Start applying smarter today</h2>
             <p>No noise. No guesswork. Just the right jobs, ranked for you.</p>
-            <SignUpButton mode="modal">
+            <SignUpButton mode="modal" forceRedirectUrl="/onboarding">
             <button className={styles.btnCta}>Create free account <ArrowRight /></button>
             </SignUpButton>
           </div>
