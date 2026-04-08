@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   if (skills?.length) {
     await prisma.userSkill.deleteMany({ where: { userId } });
     await prisma.userSkill.createMany({
-      data: skills.map((name: string) => ({ name, level: "beginner", userId })),
+      data: skills.map((name: string) => ({ name, userId })),
     });
   }
 
