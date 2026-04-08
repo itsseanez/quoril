@@ -14,7 +14,6 @@ datasource db {
 model User {
   id           String        @id
   email        String        @unique
-  name         String?
   location     String?
   experienceLevel String?    // "entry" | "mid" | "senior"
   targetRole   String?
