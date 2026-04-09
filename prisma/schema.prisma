@@ -12,15 +12,16 @@ datasource db {
 }
 
 model User {
-  id           String        @id
-  email        String        @unique
-  location     String?
-  experienceLevel String?    // "entry" | "mid" | "senior"
-  targetRole   String?
-  intentState  String        @default("exploratory") // "locked" | "hybrid" | "exploratory"
-  skills       UserSkill[]
-  applications Application[]
-  createdAt    DateTime      @default(now())
+  id              String        @id
+  email           String        @unique
+  location        String?
+  experienceLevel String?       // "entry" | "mid" | "senior"
+  targetRole      String?
+  intentState     String        @default("exploratory") // "locked" | "hybrid" | "exploratory"
+  skills          UserSkill[]
+  applications    Application[]
+  savedJobs       SavedJob[]
+  createdAt       DateTime      @default(now())
 }
 
 model UserSkill {
@@ -31,17 +32,19 @@ model UserSkill {
 }
 
 model Job {
-  id                     String   @id @default(cuid())
-  title                  String
-  company                String
-  location               String?
-  remote                 Boolean  @default(false)
-  description            String
-  applyUrl               String
-  source                 String   // "greenhouse" | "lever"
-  companySize            String?
-  sourceJobId            String   @unique
-  createdAt              DateTime @default(now())
+  id           String        @id @default(cuid())
+  title        String
+  company      String
+  location     String?
+  remote       Boolean       @default(false)
+  description  String
+  applyUrl     String
+  source       String        // "greenhouse"
+  companySize  String?
+  sourceJobId  String        @unique
+  createdAt    DateTime      @default(now())
+  applications Application[]
+  savedBy      SavedJob[]
 }
 
 model Application {
@@ -50,6 +53,19 @@ model Application {
   userId    String
   status    String   @default("applied") // "applied" | "interviewing" | "rejected" | "offer"
   notes     String?
+  applyUrl  String?
   appliedAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+  job       Job      @relation(fields: [jobId], references: [id])
+}
+
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  jobId     String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  job       Job      @relation(fields: [jobId], references: [id])
+
+  @@unique([userId, jobId])
 }
