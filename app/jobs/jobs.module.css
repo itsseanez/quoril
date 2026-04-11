@@ -1,0 +1,353 @@
+/* app/jobs/jobs.module.css */
+/* Matches the Quoril dashboard aesthetic */
+
+.shell {
+  min-height: 100vh;
+  background: var(--color-bg, #0f0f10);
+  color: var(--color-text, #e8e8e6);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+/* ── Topbar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 0 32px;
+  height: 52px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position: sticky;
+  top: 0;
+  background: var(--color-bg, #0f0f10);
+  z-index: 10;
+}
+
+.topbarBrand {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-text, #e8e8e6);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.topbarNav {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.topbarLink {
+  font-size: 13px;
+  color: var(--color-muted, #666);
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.topbarLink:hover {
+  color: var(--color-text, #e8e8e6);
+  background: rgba(255,255,255,0.05);
+}
+
+.topbarLinkActive {
+  color: var(--color-text, #e8e8e6);
+}
+
+/* ── Main ── */
+.main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.pageHeader {
+  margin-bottom: 28px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--color-muted, #666);
+  margin: 0;
+}
+
+/* ── Filters ── */
+.filters {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+}
+
+.searchWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 180px;
+  color: var(--color-muted, #666);
+}
+
+.searchInput,
+.filterInput {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--color-text, #e8e8e6);
+  width: 100%;
+}
+
+.searchInput::placeholder,
+.filterInput::placeholder {
+  color: var(--color-muted, #666);
+}
+
+.filterInput {
+  flex: 0 0 160px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+}
+
+.filterToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-muted, #666);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.filterToggle input {
+  accent-color: var(--color-accent, #a78bfa);
+}
+
+/* ── Job list ── */
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Job card ── */
+.jobCard {
+  padding: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  transition: border-color 0.15s;
+}
+
+.jobCard:hover {
+  border-color: rgba(255,255,255,0.13);
+}
+
+.jobCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.jobCardLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.jobTitle {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jobMeta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.jobMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-muted, #666);
+}
+
+/* ── Score badge ── */
+.scoreBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.scoreNumber {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.scoreLabel {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.scoreGreat {
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.2);
+  color: #34d399;
+}
+
+.scoreGood {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+}
+
+.scorePartial {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+.scoreLow {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.08);
+  color: var(--color-muted, #666);
+}
+
+/* ── Description ── */
+.jobDesc {
+  font-size: 13px;
+  color: var(--color-muted, #888);
+  line-height: 1.6;
+  margin: 0 0 4px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.jobDescExpanded {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+
+.expandBtn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: var(--color-accent, #a78bfa);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+/* ── Card actions ── */
+.jobCardActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--color-muted, #888);
+  transition: all 0.15s;
+}
+
+.saveBtn:hover {
+  color: var(--color-text, #e8e8e6);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.saveBtnActive {
+  color: var(--color-accent, #a78bfa);
+  border-color: rgba(167, 139, 250, 0.3);
+  background: rgba(167, 139, 250, 0.08);
+}
+
+.applyBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--color-accent, #a78bfa);
+  border: none;
+  color: #0f0f10;
+  transition: opacity 0.15s;
+}
+
+.applyBtn:hover {
+  opacity: 0.85;
+}
+
+.appliedBadge {
+  font-size: 12px;
+  color: #34d399;
+  font-weight: 500;
+}
+
+/* ── Empty state ── */
+.emptyState {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--color-muted, #666);
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--color-text, #e8e8e6);
+}
+
+.emptySub {
+  font-size: 13px;
+}
