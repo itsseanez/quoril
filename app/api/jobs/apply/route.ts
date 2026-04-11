@@ -29,6 +29,8 @@ export async function POST(req: Request) {
     data: {
       userId,
       jobId,
+      company: job.company,
+      jobTitle: job.title,
       status: "applied",
       applyUrl: job.applyUrl,
     },
