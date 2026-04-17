@@ -101,6 +101,22 @@ export default async function DashboardPage() {
     },
   ];
 
+  //Upcoming Interviews
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcomingInterviews = dbUser.applications
+    .filter((a) => {
+      if (!a.interviewDate) return false;
+      const d = new Date(a.interviewDate);
+      d.setHours(0, 0, 0, 0);
+      return d >= today;
+    })
+    .sort((a, b) =>
+      new Date(a.interviewDate!).getTime() - new Date(b.interviewDate!).getTime()
+    )
+    .slice(0, 3);
+
   return (
     <div className={styles.shell}>
       {/* ── Topbar ── */}
@@ -113,7 +129,7 @@ export default async function DashboardPage() {
           <Link href="/profile"      className={styles.topbarLink}>Profile</Link>
         </nav>
         <div className={styles.topbarRight}>
-          <UserButton afterSignOutUrl="/" />
+          <UserButton />
         </div>
       </header>
 
@@ -182,7 +198,7 @@ export default async function DashboardPage() {
               ))}
             </div>
 
-            {stats.total === 0 && (
+            {stats.total === 0 ? (
               <>
                 <div className={styles.divider} />
                 <div className={styles.emptyState}>
@@ -191,6 +207,35 @@ export default async function DashboardPage() {
                     Browse your job feed and start tracking applications to see your progress here.
                   </div>
                 </div>
+              </>
+            ) : (
+              <>
+                <div className={styles.divider} />
+                {upcomingInterviews.length > 0 ? (
+                  <div className={styles.upcomingList}>
+                    <span className={styles.upcomingHeading}>Upcoming interviews</span>
+                    {upcomingInterviews.map((app) => (
+                      <Link key={app.id} href="/applications" className={styles.upcomingItem}>
+                        <div className={styles.upcomingLeft}>
+                          <div className={styles.upcomingCompany}>{app.company}</div>
+                          <div className={styles.upcomingRole}>{app.jobTitle}</div>
+                        </div>
+                        <div className={styles.upcomingDate}>
+                          {new Date(app.interviewDate!).toLocaleDateString("en-US", {
+                            month: "long", day: "numeric",
+                          })}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.emptyState}>
+                    <div className={styles.emptyStateTitle}>No upcoming interviews</div>
+                    <div className={styles.emptyStateText}>
+                      Keep applying — you've got {stats.total} application{stats.total !== 1 ? "s" : ""} out there.
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>

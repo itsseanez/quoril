@@ -2,9 +2,10 @@
 
 // app/applications/page.tsx
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./applications.module.css";
+import { InterviewDateModal } from "@/app/applications/components/InterviewDateModal";
 
 // ── types ─────────────────────────────────────────────────────────────────────
 
@@ -200,6 +201,8 @@ function AppRow({ app, onStatusChange, onNotesChange, onDelete }: {
   const [expanded, setExpanded] = useState(false);
   const [notes, setNotes] = useState(app.notes ?? "");
   const [saving, setSaving] = useState(false);
+  const [showInterviewModal, setShowInterviewModal] = useState(false);
+  const pendingNext = useRef<Status | null>(null);
 
   async function saveNotes() {
     if (notes === app.notes) return;
@@ -216,19 +219,31 @@ function AppRow({ app, onStatusChange, onNotesChange, onDelete }: {
   function advanceStatus() {
     const next = STATUS_META[app.status].next;
     if (!next) return;
-    // 🎯 ONLY trigger for interviewing
-    let interviewDate: string | null = null;
-    if (next === "interviewing") {
-      const input = prompt("Enter interview date (YYYY-MM-DD):");
-      if (!input) return;
 
-      interviewDate = input;
+    if (next === "interviewing") {
+      pendingNext.current = next;
+      setShowInterviewModal(true);
+      return;
     }
-    onStatusChange(app.id, next, interviewDate);
+
+    onStatusChange(app.id, next, null);
     fetch(`/api/applications/${app.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: next, interviewDate }),
+      body: JSON.stringify({ status: next, interviewDate: null }),
+    });
+  }
+
+  function handleInterviewConfirm(date: string) {
+    setShowInterviewModal(false);
+    const next = pendingNext.current;
+    if (!next) return;
+    pendingNext.current = null;
+    onStatusChange(app.id, next, date);
+    fetch(`/api/applications/${app.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: next, interviewDate: date }),
     });
   }
 
@@ -237,65 +252,76 @@ function AppRow({ app, onStatusChange, onNotesChange, onDelete }: {
   });
 
   const interviewDate = app.interviewDate
-    ? new Date(app.interviewDate).toLocaleDateString("en-US", {
+    ? new Date(app.interviewDate.slice(0, 10) + "T00:00:00").toLocaleDateString("en-US", {
         month: "long", day: "numeric",
       })
     : null;
 
   return (
-    <div className={`${styles.appRow} ${expanded ? styles.appRowExpanded : ""}`}>
-      <div className={styles.appRowMain} onClick={() => setExpanded((e) => !e)}>
-        <div className={styles.appRowLeft}>
-          <div className={styles.appTitle}>{app.jobTitle}</div>
-          <div className={styles.appMeta}>
-            <span>{app.company}</span>
-            <span className={styles.dot}>·</span>
-            <span>{appliedDate}</span>
-            {interviewDate && (
-              <>
-                <span className={styles.dot}>·</span>
-                <span className={styles.interviewBadge}>Interview {interviewDate}</span>
-              </>
+    <>
+      <div className={`${styles.appRow} ${expanded ? styles.appRowExpanded : ""}`}>
+        <div className={styles.appRowMain} onClick={() => setExpanded((e) => !e)}>
+          <div className={styles.appRowLeft}>
+            <div className={styles.appTitle}>{app.jobTitle}</div>
+            <div className={styles.appMeta}>
+              <span>{app.company}</span>
+              <span className={styles.dot}>·</span>
+              <span>{appliedDate}</span>
+              {interviewDate && (
+                <>
+                  <span className={styles.dot}>·</span>
+                  <span className={styles.interviewBadge}>Interview {interviewDate}</span>
+                </>
+              )}
+            </div>
+          </div>
+          <div className={styles.appRowRight} onClick={(e) => e.stopPropagation()}>
+            {app.applyUrl && (
+              <a
+                href={app.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.appLink}
+                title="View posting"
+              >
+                <ExternalIcon />
+              </a>
             )}
+            <StatusPill status={app.status} onClick={advanceStatus} />
+            <button
+              className={styles.deleteBtn}
+              onClick={() => onDelete(app.id)}
+              title="Delete"
+            >
+              <TrashIcon />
+            </button>
           </div>
         </div>
-        <div className={styles.appRowRight} onClick={(e) => e.stopPropagation()}>
-          {app.applyUrl && (
-            <a
-              href={app.applyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.appLink}
-              title="View posting"
-            >
-              <ExternalIcon />
-            </a>
-          )}
-          <StatusPill status={app.status} onClick={advanceStatus} />
-          <button
-            className={styles.deleteBtn}
-            onClick={() => onDelete(app.id)}
-            title="Delete"
-          >
-            <TrashIcon />
-          </button>
-        </div>
+
+        {expanded && (
+          <div className={styles.appRowDetail}>
+            <textarea
+              className={styles.notesInput}
+              placeholder="Add notes…"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              onBlur={saveNotes}
+              rows={3}
+            />
+            {saving && <span className={styles.savingLabel}>Saving…</span>}
+          </div>
+        )}
       </div>
 
-      {expanded && (
-        <div className={styles.appRowDetail}>
-          <textarea
-            className={styles.notesInput}
-            placeholder="Add notes…"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            onBlur={saveNotes}
-            rows={3}
-          />
-          {saving && <span className={styles.savingLabel}>Saving…</span>}
-        </div>
-      )}
-    </div>
+      <InterviewDateModal
+        open={showInterviewModal}
+        onConfirm={handleInterviewConfirm}
+        onCancel={() => {
+          setShowInterviewModal(false);
+          pendingNext.current = null;
+        }}
+      />
+    </>
   );
 }
 
@@ -321,9 +347,9 @@ export default function ApplicationsPage() {
   }
 
   function handleStatusChange(
-  id: string,
-  status: Status,
-  interviewDate?: string | null
+    id: string,
+    status: Status,
+    interviewDate?: string | null
   ) {
     setApps((prev) =>
       prev.map((a) =>
