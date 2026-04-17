@@ -258,12 +258,16 @@ export default async function DashboardPage() {
               </div>
 
               {/* Progress */}
-              <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: `${completeness}%` }} />
-              </div>
-              <div className={styles.progressLabel}>{completeness}% profile complete</div>
+              {completeness < 100 && (
+                <>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${completeness}%` }} />
+                </div>
+                <div className={styles.progressLabel}>{completeness}% profile complete</div>
 
-              <div className={styles.divider} />
+                <div className={styles.divider} />
+                </>
+              )}
 
               {/* Fields */}
               <div className={styles.profileFields}>
