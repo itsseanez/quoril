@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./applications.module.css";
 import { InterviewDateModal } from "@/app/applications/components/InterviewDateModal";
+import TopBar from "@/components/TopBar/TopBar";
 
 // ── types ─────────────────────────────────────────────────────────────────────
 
@@ -385,15 +386,7 @@ export default function ApplicationsPage() {
 
   return (
     <div className={styles.shell}>
-      <header className={styles.topbar}>
-        <Link href="/dashboard" className={styles.topbarBrand}>Quoril</Link>
-        <nav className={styles.topbarNav}>
-          <Link href="/dashboard" className={styles.topbarLink}>Dashboard</Link>
-          <Link href="/jobs" className={styles.topbarLink}>Jobs</Link>
-          <Link href="/applications" className={`${styles.topbarLink} ${styles.topbarLinkActive}`}>Applications</Link>
-          <Link href="/profile" className={styles.topbarLink}>Profile</Link>
-        </nav>
-      </header>
+      <TopBar />
 
       <main className={styles.main}>
         <div className={styles.pageHeader}>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { prisma } from "@/lib/prisma";
 import styles from "./dashboard.module.css";
+import TopBar from "@/components/TopBar/TopBar";
 
 const INTENT_LABELS = {
   locked:      { label: "Locked",      desc: "Optimizing for your target role" },
@@ -120,18 +121,7 @@ export default async function DashboardPage() {
   return (
     <div className={styles.shell}>
       {/* ── Topbar ── */}
-      <header className={styles.topbar}>
-        <Link href="/dashboard" className={styles.topbarBrand}>Quoril</Link>
-        <nav className={styles.topbarNav}>
-          <Link href="/dashboard" className={`${styles.topbarLink} ${styles.topbarLinkActive}`}>Dashboard</Link>
-          <Link href="/jobs"         className={styles.topbarLink}>Jobs</Link>
-          <Link href="/applications" className={styles.topbarLink}>Applications</Link>
-          <Link href="/profile"      className={styles.topbarLink}>Profile</Link>
-        </nav>
-        <div className={styles.topbarRight}>
-          <UserButton />
-        </div>
-      </header>
+      <TopBar />
 
       {/* ── Main ── */}
       <main className={styles.main}>

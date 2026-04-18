@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./profile.module.css";
+import TopBar from "@/components/TopBar/TopBar";
 
 // ── types ─────────────────────────────────────────────────────────────────────
 
@@ -311,14 +312,6 @@ export default function ProfilePage() {
 
 function Topbar() {
   return (
-    <header className={styles.topbar}>
-      <Link href="/dashboard" className={styles.topbarBrand}>Quoril</Link>
-      <nav className={styles.topbarNav}>
-        <Link href="/dashboard" className={styles.topbarLink}>Dashboard</Link>
-        <Link href="/jobs"         className={styles.topbarLink}>Jobs</Link>
-        <Link href="/applications" className={styles.topbarLink}>Applications</Link>
-        <Link href="/profile"      className={`${styles.topbarLink} ${styles.topbarLinkActive}`}>Profile</Link>
-      </nav>
-    </header>
+    <TopBar />
   );
 }

@@ -2,50 +2,9 @@
 
 .shell {
   min-height: 100vh;
-  background: var(--color-bg, #0f0f10);
-  color: var(--color-text, #e8e8e6);
-  font-family: var(--font-sans, system-ui, sans-serif);
+  background: var(--paper);
+  color: var(--ink);
 }
-
-/* ── Topbar ── */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 0 32px;
-  height: 52px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  position: sticky;
-  top: 0;
-  background: var(--color-bg, #0f0f10);
-  z-index: 10;
-}
-
-.topbarBrand {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--color-text, #e8e8e6);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-}
-
-.topbarNav { display: flex; gap: 4px; flex: 1; }
-
-.topbarLink {
-  font-size: 13px;
-  color: var(--color-muted, #666);
-  text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 6px;
-  transition: color 0.15s, background 0.15s;
-}
-
-.topbarLink:hover {
-  color: var(--color-text, #e8e8e6);
-  background: rgba(255,255,255,0.05);
-}
-
-.topbarLinkActive { color: var(--color-text, #e8e8e6); }
 
 /* ── Main ── */
 .main {
@@ -70,17 +29,17 @@
 
 .sub {
   font-size: 13px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   margin: 0;
 }
 
 /* ── Save button ── */
 .saveBtn {
   padding: 8px 18px;
-  background: var(--color-accent, #a78bfa);
+  background: var(--ink);
   border: none;
   border-radius: 8px;
-  color: #0f0f10;
+  color: var(--paper);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -88,7 +47,7 @@
   flex-shrink: 0;
 }
 
-.saveBtn:hover:not(:disabled) { opacity: 0.85; }
+.saveBtn:hover:not(:disabled) { opacity: 0.8; }
 .saveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .saveBtnSaved {
@@ -114,21 +73,21 @@
 .completenessBar {
   flex: 1;
   height: 4px;
-  background: rgba(255,255,255,0.07);
+  background: var(--surface);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .completenessFill {
   height: 100%;
-  background: var(--color-accent, #a78bfa);
+  background: var(--accent-warm);
   border-radius: 2px;
   transition: width 0.4s ease;
 }
 
 .completenessLabel {
   font-size: 12px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   white-space: nowrap;
 }
 
@@ -151,17 +110,17 @@
 .sectionTitle {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
 }
 
 .sectionSub {
   font-size: 12px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
 }
 
 .divider {
   height: 1px;
-  background: rgba(255,255,255,0.06);
+  background: var(--border);
 }
 
 /* ── Read-only account fields ── */
@@ -176,21 +135,21 @@
   flex-direction: column;
   gap: 4px;
   padding: 12px 14px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
 }
 
 .readOnlyLabel {
   font-size: 11px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .readOnlyValue {
   font-size: 13px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
 }
 
 /* ── Intent grid ── */
@@ -205,8 +164,8 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
   text-align: left;
@@ -215,20 +174,20 @@
 }
 
 .intentOption:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.12);
+  background: var(--paper);
+  border-color: rgba(0,0,0,0.14);
 }
 
 .intentOptionSelected {
-  background: rgba(167, 139, 250, 0.07);
-  border-color: rgba(167, 139, 250, 0.3);
+  background: var(--surface);
+  border-color: var(--accent-warm);
 }
 
 .intentDot {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.2);
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -237,14 +196,14 @@
 }
 
 .intentDotSelected {
-  border-color: var(--color-accent, #a78bfa);
+  border-color: var(--accent-warm);
 }
 
 .intentDotInner {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-accent, #a78bfa);
+  background: var(--accent-warm);
 }
 
 .intentText {
@@ -256,12 +215,12 @@
 .intentLabel {
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
 }
 
 .intentDesc {
   font-size: 12px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
 }
 
 /* ── Field group ── */
@@ -279,15 +238,15 @@
 
 .label {
   font-size: 12px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
   font-weight: 500;
 }
 
 .input {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
   font-size: 13px;
   padding: 10px 12px;
   outline: none;
@@ -297,8 +256,8 @@
   box-sizing: border-box;
 }
 
-.input:focus { border-color: rgba(255,255,255,0.2); }
-.input::placeholder { color: var(--color-muted, #555); }
+.input:focus { border-color: var(--ink-3); }
+.input::placeholder { color: var(--ink-3); }
 
 /* ── Level pills ── */
 .levelGroup {
@@ -308,24 +267,24 @@
 
 .levelPill {
   padding: 7px 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 20px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
   font-size: 13px;
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .levelPill:hover {
-  color: var(--color-text, #e8e8e6);
-  border-color: rgba(255,255,255,0.18);
+  color: var(--ink);
+  border-color: rgba(0,0,0,0.14);
 }
 
 .levelPillSelected {
-  background: rgba(167, 139, 250, 0.12);
-  border-color: rgba(167, 139, 250, 0.35);
-  color: var(--color-accent, #a78bfa);
+  background: var(--surface);
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 /* ── Skills ── */
@@ -337,10 +296,10 @@
 
 .addBtn {
   padding: 10px 16px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -349,7 +308,7 @@
   flex-shrink: 0;
 }
 
-.addBtn:hover { background: rgba(255,255,255,0.09); }
+.addBtn:hover { border-color: rgba(0,0,0,0.14); }
 
 .skillTags {
   display: flex;
@@ -362,17 +321,17 @@
   align-items: center;
   gap: 5px;
   padding: 5px 10px 5px 12px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 20px;
   font-size: 12px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
 }
 
 .skillTagRemove {
   background: none;
   border: none;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   cursor: pointer;
   font-size: 15px;
   line-height: 1;
@@ -386,7 +345,7 @@
 
 .emptySkills {
   font-size: 13px;
-  color: var(--color-muted, #555);
+  color: var(--ink-3);
   margin: 0;
 }
 
@@ -398,8 +357,8 @@
   left: 0;
   right: 0;
   padding: 12px 24px;
-  background: var(--color-bg, #0f0f10);
-  border-top: 1px solid rgba(255,255,255,0.07);
+  background: var(--paper);
+  border-top: 1px solid var(--border);
   z-index: 20;
 }
 
@@ -413,5 +372,32 @@
   padding: 60px 0;
   text-align: center;
   font-size: 13px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 780px) {
+  .main {
+    padding: 32px 20px 100px;
+  }
+
+  .readOnlyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .levelGroup {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 420px) {
+  .skillInputRow {
+    flex-direction: column;
+  }
+
+  .addBtn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 }

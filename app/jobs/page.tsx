@@ -9,6 +9,8 @@
 import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import styles from "./jobs.module.css";
+import { UserButton } from "@clerk/nextjs";
+import TopBar from "@/components/TopBar/TopBar";
 
 // ── types ─────────────────────────────────────────────────────────────────────
 
@@ -222,15 +224,7 @@ export default function JobsPage() {
   return (
     <div className={styles.shell}>
       {/* ── Topbar ── */}
-      <header className={styles.topbar}>
-        <Link href="/dashboard" className={styles.topbarBrand}>Quoril</Link>
-        <nav className={styles.topbarNav}>
-          <Link href="/dashboard" className={styles.topbarLink}>Dashboard</Link>
-          <Link href="/jobs" className={`${styles.topbarLink} ${styles.topbarLinkActive}`}>Jobs</Link>
-          <Link href="/applications" className={styles.topbarLink}>Applications</Link>
-          <Link href="/profile" className={styles.topbarLink}>Profile</Link>
-        </nav>
-      </header>
+      <TopBar />
 
       <main className={styles.main}>
         <div className={styles.pageHeader}>

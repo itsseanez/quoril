@@ -1,64 +1,17 @@
 /* app/jobs/jobs.module.css */
-/* Matches the Quoril dashboard aesthetic */
 
 .shell {
   min-height: 100vh;
-  background: var(--color-bg, #0f0f10);
-  color: var(--color-text, #e8e8e6);
-  font-family: var(--font-sans, system-ui, sans-serif);
-}
-
-/* ── Topbar ── */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 0 32px;
-  height: 52px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  position: sticky;
-  top: 0;
   background: var(--paper);
-  z-index: 10;
-}
-
-.topbarBrand {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--color-text, #e8e8e6);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-}
-
-.topbarNav {
   display: flex;
-  gap: 4px;
-  flex: 1;
-}
-
-.topbarLink {
-  font-size: 13px;
-  color: var(--color-muted, #666);
-  text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 6px;
-  transition: color 0.15s, background 0.15s;
-}
-
-.topbarLink:hover {
-  color: var(--color-text, #e8e8e6);
-  background: rgba(255,255,255,0.05);
-}
-
-.topbarLinkActive {
-  color: var(--color-text, #e8e8e6);
+  flex-direction: column;
 }
 
 /* ── Main ── */
 .main {
   max-width: 860px;
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding: 48px 28px 80px;
 }
 
 .pageHeader {
@@ -66,15 +19,18 @@
 }
 
 .heading {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 4px;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 400;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 6px;
 }
 
 .sub {
   font-size: 13px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
+  font-weight: 300;
   margin: 0;
 }
 
@@ -86,8 +42,8 @@
   flex-wrap: wrap;
   margin-bottom: 24px;
   padding: 14px 16px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
 }
 
@@ -97,7 +53,7 @@
   gap: 8px;
   flex: 1;
   min-width: 180px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
 }
 
 .searchInput,
@@ -106,21 +62,22 @@
   border: none;
   outline: none;
   font-size: 13px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
   width: 100%;
 }
 
 .searchInput::placeholder,
 .filterInput::placeholder {
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
 }
 
 .filterInput {
   flex: 0 0 160px;
   padding: 4px 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--paper);
+  border: 1px solid var(--border);
   border-radius: 6px;
+  color: var(--ink);
 }
 
 .filterToggle {
@@ -128,14 +85,14 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
 }
 
 .filterToggle input {
-  accent-color: var(--color-accent, #a78bfa);
+  accent-color: var(--accent-warm);
 }
 
 /* ── Job list ── */
@@ -148,14 +105,15 @@
 /* ── Job card ── */
 .jobCard {
   padding: 20px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 12px;
-  transition: border-color 0.15s;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
 .jobCard:hover {
-  border-color: rgba(255,255,255,0.13);
+  border-color: rgba(0,0,0,0.14);
+  transform: translateY(-1px);
 }
 
 .jobCardTop {
@@ -173,8 +131,9 @@
 
 .jobTitle {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
+  color: var(--ink);
   margin-bottom: 5px;
   white-space: nowrap;
   overflow: hidden;
@@ -192,7 +151,8 @@
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
+  font-weight: 300;
 }
 
 /* ── Score badge ── */
@@ -204,12 +164,13 @@
   padding: 6px 12px;
   border-radius: 8px;
   flex-shrink: 0;
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
 }
 
 .scoreNumber {
-  font-size: 16px;
-  font-weight: 700;
+  font-family: 'Instrument Serif', serif;
+  font-size: 18px;
+  font-weight: 400;
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -223,34 +184,35 @@
 }
 
 .scoreGreat {
-  background: rgba(52, 211, 153, 0.1);
-  border-color: rgba(52, 211, 153, 0.2);
-  color: #34d399;
+  background: var(--green-bg);
+  border-color: var(--green-border);
+  color: var(--green);
 }
 
 .scoreGood {
-  background: rgba(96, 165, 250, 0.1);
-  border-color: rgba(96, 165, 250, 0.2);
-  color: #60a5fa;
+  background: var(--blue-bg);
+  border-color: var(--blue-border);
+  color: var(--blue);
 }
 
 .scorePartial {
-  background: rgba(251, 191, 36, 0.1);
-  border-color: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
+  background: var(--orange-bg);
+  border-color: var(--orange-border);
+  color: var(--orange);
 }
 
 .scoreLow {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.08);
-  color: var(--color-muted, #666);
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--ink-3);
 }
 
 /* ── Description ── */
 .jobDesc {
   font-size: 13px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
   line-height: 1.6;
+  font-weight: 300;
   margin: 0 0 4px;
   overflow: hidden;
   display: -webkit-box;
@@ -267,10 +229,15 @@
   background: none;
   border: none;
   font-size: 12px;
-  color: var(--color-accent, #a78bfa);
+  color: var(--accent-warm);
   cursor: pointer;
   padding: 0;
   margin-bottom: 12px;
+  transition: opacity 0.15s;
+}
+
+.expandBtn:hover {
+  opacity: 0.7;
 }
 
 /* ── Card actions ── */
@@ -280,7 +247,7 @@
   align-items: center;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--border);
 }
 
 .saveBtn {
@@ -290,23 +257,23 @@
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--color-muted, #888);
+  background: var(--paper);
+  border: 1px solid var(--border);
+  color: var(--ink-3);
   transition: all 0.15s;
 }
 
 .saveBtn:hover {
-  color: var(--color-text, #e8e8e6);
-  border-color: rgba(255,255,255,0.15);
+  color: var(--ink-2);
+  background: var(--surface);
 }
 
 .saveBtnActive {
-  color: var(--color-accent, #a78bfa);
-  border-color: rgba(167, 139, 250, 0.3);
-  background: rgba(167, 139, 250, 0.08);
+  color: var(--accent-warm);
+  border-color: var(--accent-warm);
+  background: var(--paper);
 }
 
 .applyBtn {
@@ -318,19 +285,19 @@
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  background: var(--color-accent, #a78bfa);
+  background: var(--ink);
   border: none;
-  color: #0f0f10;
+  color: var(--paper);
   transition: opacity 0.15s;
 }
 
 .applyBtn:hover {
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 .appliedBadge {
   font-size: 12px;
-  color: #34d399;
+  color: var(--green);
   font-weight: 500;
 }
 
@@ -338,16 +305,101 @@
 .emptyState {
   text-align: center;
   padding: 60px 0;
-  color: var(--color-muted, #666);
 }
 
 .emptyTitle {
   font-size: 15px;
   font-weight: 500;
+  color: var(--ink-2);
   margin-bottom: 6px;
-  color: var(--color-text, #e8e8e6);
 }
 
 .emptySub {
   font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+/* ── Topbar (shared styles, keep until Topbar component is adopted) ── */
+.topbar {
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.topbarBrand {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.3px;
+}
+
+.topbarNav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topbarLink {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.topbarLink:hover {
+  background: var(--surface);
+  color: var(--ink-2);
+}
+
+.topbarLinkActive {
+  color: var(--ink);
+  background: var(--surface);
+}
+
+/* ── Responsive ── */
+@media (max-width: 780px) {
+  .topbarNav {
+    display: none;
+  }
+
+  .main {
+    padding: 32px 20px 60px;
+  }
+
+  .filterInput {
+    flex: 0 0 120px;
+  }
+}
+
+@media (max-width: 420px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchWrap {
+    min-width: unset;
+  }
+
+  .filterInput {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .filterToggle {
+    white-space: normal;
+  }
 }

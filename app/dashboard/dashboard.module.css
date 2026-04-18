@@ -6,61 +6,6 @@
   flex-direction: column;
 }
 
-/* ── Topbar ── */
-.topbar {
-  height: 56px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: color-mix(in srgb, var(--paper) 90%, transparent);
-  backdrop-filter: blur(12px);
-}
-
-.topbarBrand {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--ink);
-  text-decoration: none;
-  letter-spacing: -0.3px;
-}
-
-.topbarNav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.topbarLink {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--ink-3);
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: 8px;
-  transition: background 0.15s, color 0.15s;
-}
-
-.topbarLink:hover {
-  background: var(--surface);
-  color: var(--ink-2);
-}
-
-.topbarLinkActive {
-  color: var(--ink);
-  background: var(--surface);
-}
-
-.topbarRight {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 /* ── Main layout ── */
 .main {
   flex: 1;

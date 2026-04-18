@@ -2,50 +2,9 @@
 
 .shell {
   min-height: 100vh;
-  background: var(--color-bg, #0f0f10);
-  color: var(--color-text, #e8e8e6);
-  font-family: var(--font-sans, system-ui, sans-serif);
+  background: var(--paper);
+  color: var(--ink);
 }
-
-/* ── Topbar ── */
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 0 32px;
-  height: 52px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  position: sticky;
-  top: 0;
-  background: var(--color-bg, #0f0f10);
-  z-index: 10;
-}
-
-.topbarBrand {
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--color-text, #e8e8e6);
-  text-decoration: none;
-  letter-spacing: -0.01em;
-}
-
-.topbarNav { display: flex; gap: 4px; flex: 1; }
-
-.topbarLink {
-  font-size: 13px;
-  color: var(--color-muted, #666);
-  text-decoration: none;
-  padding: 5px 10px;
-  border-radius: 6px;
-  transition: color 0.15s, background 0.15s;
-}
-
-.topbarLink:hover {
-  color: var(--color-text, #e8e8e6);
-  background: rgba(255,255,255,0.05);
-}
-
-.topbarLinkActive { color: var(--color-text, #e8e8e6); }
 
 /* ── Main ── */
 .main {
@@ -70,7 +29,7 @@
 
 .sub {
   font-size: 13px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   margin: 0;
 }
 
@@ -79,10 +38,10 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  background: var(--color-accent, #a78bfa);
+  background: var(--ink);
   border: none;
   border-radius: 8px;
-  color: #0f0f10;
+  color: var(--paper);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -90,14 +49,14 @@
   flex-shrink: 0;
 }
 
-.addBtn:hover { opacity: 0.85; }
+.addBtn:hover { opacity: 0.8; }
 
 /* ── Filter tabs ── */
 .filterTabs {
   display: flex;
   gap: 4px;
   margin-bottom: 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid var(--border);
   padding-bottom: 0;
 }
 
@@ -109,26 +68,27 @@
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   font-size: 13px;
   cursor: pointer;
   transition: color 0.15s;
   margin-bottom: -1px;
 }
 
-.filterTab:hover { color: var(--color-text, #e8e8e6); }
+.filterTab:hover { color: var(--ink); }
 
 .filterTabActive {
-  color: var(--color-text, #e8e8e6);
-  border-bottom-color: var(--color-accent, #a78bfa);
+  color: var(--ink);
+  border-bottom-color: var(--accent-warm);
 }
 
 .filterCount {
   font-size: 11px;
   padding: 1px 6px;
-  background: rgba(255,255,255,0.07);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
 }
 
 /* ── App list ── */
@@ -140,15 +100,15 @@
 
 /* ── App row ── */
 .appRow {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
   transition: border-color 0.15s;
 }
 
-.appRow:hover { border-color: rgba(255,255,255,0.12); }
-.appRowExpanded { border-color: rgba(255,255,255,0.12); }
+.appRow:hover { border-color: rgba(0,0,0,0.14); }
+.appRowExpanded { border-color: rgba(0,0,0,0.14); }
 
 .appRowMain {
   display: flex;
@@ -165,6 +125,7 @@
 .appTitle {
   font-size: 14px;
   font-weight: 600;
+  color: var(--ink);
   margin-bottom: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -176,13 +137,13 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
 }
 
 .dot { opacity: 0.4; }
 
 .interviewBadge {
-  color: #fbbf24;
+  color: var(--orange);
   font-weight: 500;
 }
 
@@ -196,18 +157,18 @@
 .appLink {
   display: flex;
   align-items: center;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   transition: color 0.15s;
 }
 
-.appLink:hover { color: var(--color-text, #e8e8e6); }
+.appLink:hover { color: var(--ink); }
 
 .deleteBtn {
   display: flex;
   align-items: center;
   background: none;
   border: none;
-  color: var(--color-muted, #555);
+  color: var(--ink-3);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -235,42 +196,42 @@
 .statusPill:hover { opacity: 0.8; }
 
 .status_applied {
-  background: rgba(96, 165, 250, 0.12);
-  border-color: rgba(96, 165, 250, 0.25);
-  color: #60a5fa;
+  background: var(--blue-bg);
+  border-color: var(--blue-border);
+  color: var(--blue);
 }
 
 .status_interviewing {
-  background: rgba(251, 191, 36, 0.12);
-  border-color: rgba(251, 191, 36, 0.25);
-  color: #fbbf24;
+  background: var(--orange-bg);
+  border-color: var(--orange-border);
+  color: var(--orange);
 }
 
 .status_offer {
-  background: rgba(52, 211, 153, 0.12);
-  border-color: rgba(52, 211, 153, 0.25);
-  color: #34d399;
+  background: var(--green-bg);
+  border-color: var(--green-border);
+  color: var(--green);
 }
 
 .status_rejected {
-  background: rgba(248, 113, 113, 0.12);
-  border-color: rgba(248, 113, 113, 0.25);
-  color: #f87171;
+  background: var(--red-bg);
+  border-color: var(--red-border);
+  color: var(--red);
 }
 
 /* ── Expanded notes ── */
 .appRowDetail {
   padding: 0 16px 14px;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid var(--border);
   padding-top: 12px;
 }
 
 .notesInput {
   width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
   font-size: 13px;
   padding: 10px 12px;
   resize: vertical;
@@ -280,12 +241,12 @@
   box-sizing: border-box;
 }
 
-.notesInput:focus { border-color: rgba(255,255,255,0.18); }
-.notesInput::placeholder { color: var(--color-muted, #555); }
+.notesInput:focus { border-color: var(--ink-3); }
+.notesInput::placeholder { color: var(--ink-3); }
 
 .savingLabel {
   font-size: 11px;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   margin-top: 4px;
   display: block;
 }
@@ -294,7 +255,7 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.4);
   backdrop-filter: blur(4px);
   z-index: 50;
   display: flex;
@@ -304,12 +265,12 @@
 }
 
 .modal {
-  background: #1a1a1c;
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--paper);
+  border: 1px solid var(--border);
   border-radius: 14px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.15);
 }
 
 .modalHeader {
@@ -322,12 +283,13 @@
 .modalTitle {
   font-size: 15px;
   font-weight: 600;
+  color: var(--ink);
 }
 
 .modalClose {
   background: none;
   border: none;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
   font-size: 20px;
   cursor: pointer;
   line-height: 1;
@@ -335,7 +297,7 @@
   transition: color 0.15s;
 }
 
-.modalClose:hover { color: var(--color-text, #e8e8e6); }
+.modalClose:hover { color: var(--ink); }
 
 .modalBody {
   padding: 20px 24px;
@@ -358,7 +320,7 @@
 
 .label {
   font-size: 12px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
   font-weight: 500;
 }
 
@@ -366,10 +328,10 @@
 
 .input,
 .textarea {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 7px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
   font-size: 13px;
   padding: 8px 12px;
   outline: none;
@@ -380,16 +342,15 @@
 }
 
 .input:focus,
-.textarea:focus { border-color: rgba(255,255,255,0.2); }
+.textarea:focus { border-color: var(--ink-3); }
 
 .input::placeholder,
-.textarea::placeholder { color: var(--color-muted, #555); }
+.textarea::placeholder { color: var(--ink-3); }
 
 .textarea { resize: vertical; line-height: 1.5; }
 
-/* Date input calendar icon color */
 .input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.5);
+  opacity: 0.5;
   cursor: pointer;
 }
 
@@ -402,44 +363,82 @@
 
 .btnCancel {
   padding: 8px 16px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.09);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 7px;
-  color: var(--color-muted, #888);
+  color: var(--ink-3);
   font-size: 13px;
   cursor: pointer;
   transition: color 0.15s;
 }
 
-.btnCancel:hover { color: var(--color-text, #e8e8e6); }
+.btnCancel:hover { color: var(--ink); }
 
 .btnSave {
   padding: 8px 18px;
-  background: var(--color-accent, #a78bfa);
+  background: var(--ink);
   border: none;
   border-radius: 7px;
-  color: #0f0f10;
+  color: var(--paper);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.15s;
 }
 
-.btnSave:hover { opacity: 0.85; }
+.btnSave:hover { opacity: 0.8; }
 .btnSave:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ── Empty state ── */
 .emptyState {
   text-align: center;
   padding: 60px 0;
-  color: var(--color-muted, #666);
+  color: var(--ink-3);
 }
 
 .emptyTitle {
   font-size: 15px;
   font-weight: 500;
   margin-bottom: 6px;
-  color: var(--color-text, #e8e8e6);
+  color: var(--ink);
 }
 
 .emptySub { font-size: 13px; }
+
+/* ── Responsive ── */
+@media (max-width: 780px) {
+  .main {
+    padding: 32px 20px 60px;
+  }
+
+  .filterTabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+
+  .modalOverlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    border-radius: 14px 14px 0 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .appRowMain {
+    flex-wrap: wrap;
+  }
+
+  .appRowRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
