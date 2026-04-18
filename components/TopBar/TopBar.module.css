@@ -1,0 +1,68 @@
+/* ── Topbar ─────────────────────────────────────────────────────────────────── */
+
+.topbar {
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(12px);
+  gap: 32px;
+}
+
+.topbarBrand {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.3px;
+}
+
+.topbarBrand:hover {
+  opacity: 0.7;
+}
+
+.topbarNav {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.topbarLink {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.topbarLink:hover {
+  background: var(--surface);
+  color: var(--ink-2);
+}
+
+.topbarLinkActive {
+  color: var(--ink);
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 780px) {
+  .topbarNav {
+    display: none;
+  }
+}
