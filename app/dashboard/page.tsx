@@ -312,6 +312,7 @@ export default async function DashboardPage() {
                 <span className={styles.emptySkills}>No skills added yet</span>
               )}
             </div>
+
           </div>
 
         </div>

@@ -1,0 +1,417 @@
+/* app/profile/profile.module.css */
+
+.shell {
+  min-height: 100vh;
+  background: var(--color-bg, #0f0f10);
+  color: var(--color-text, #e8e8e6);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+/* ── Topbar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 0 32px;
+  height: 52px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position: sticky;
+  top: 0;
+  background: var(--color-bg, #0f0f10);
+  z-index: 10;
+}
+
+.topbarBrand {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-text, #e8e8e6);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.topbarNav { display: flex; gap: 4px; flex: 1; }
+
+.topbarLink {
+  font-size: 13px;
+  color: var(--color-muted, #666);
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.topbarLink:hover {
+  color: var(--color-text, #e8e8e6);
+  background: rgba(255,255,255,0.05);
+}
+
+.topbarLinkActive { color: var(--color-text, #e8e8e6); }
+
+/* ── Main ── */
+.main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 24px 120px;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--color-muted, #666);
+  margin: 0;
+}
+
+/* ── Save button ── */
+.saveBtn {
+  padding: 8px 18px;
+  background: var(--color-accent, #a78bfa);
+  border: none;
+  border-radius: 8px;
+  color: #0f0f10;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.saveBtn:hover:not(:disabled) { opacity: 0.85; }
+.saveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.saveBtnSaved {
+  background: #34d399;
+  color: #0a2e22;
+}
+
+.saveBtnError {
+  background: #f87171;
+  color: #2a0a0a;
+}
+
+.saveBtnFull { width: 100%; justify-content: center; }
+
+/* ── Completeness ── */
+.completenessWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+
+.completenessBar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.completenessFill {
+  height: 100%;
+  background: var(--color-accent, #a78bfa);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.completenessLabel {
+  font-size: 12px;
+  color: var(--color-muted, #666);
+  white-space: nowrap;
+}
+
+/* ── Sections ── */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.section { padding: 28px 0; }
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 18px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #e8e8e6);
+}
+
+.sectionSub {
+  font-size: 12px;
+  color: var(--color-muted, #666);
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+/* ── Read-only account fields ── */
+.readOnlyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.readOnlyField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+}
+
+.readOnlyLabel {
+  font-size: 11px;
+  color: var(--color-muted, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.readOnlyValue {
+  font-size: 13px;
+  color: var(--color-text, #e8e8e6);
+}
+
+/* ── Intent grid ── */
+.intentGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.intentOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+
+.intentOption:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.intentOptionSelected {
+  background: rgba(167, 139, 250, 0.07);
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+.intentDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+
+.intentDotSelected {
+  border-color: var(--color-accent, #a78bfa);
+}
+
+.intentDotInner {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent, #a78bfa);
+}
+
+.intentText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.intentLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #e8e8e6);
+}
+
+.intentDesc {
+  font-size: 12px;
+  color: var(--color-muted, #888);
+}
+
+/* ── Field group ── */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--color-muted, #888);
+  font-weight: 500;
+}
+
+.input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  color: var(--color-text, #e8e8e6);
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus { border-color: rgba(255,255,255,0.2); }
+.input::placeholder { color: var(--color-muted, #555); }
+
+/* ── Level pills ── */
+.levelGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.levelPill {
+  padding: 7px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 20px;
+  color: var(--color-muted, #888);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.levelPill:hover {
+  color: var(--color-text, #e8e8e6);
+  border-color: rgba(255,255,255,0.18);
+}
+
+.levelPillSelected {
+  background: rgba(167, 139, 250, 0.12);
+  border-color: rgba(167, 139, 250, 0.35);
+  color: var(--color-accent, #a78bfa);
+}
+
+/* ── Skills ── */
+.skillInputRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.addBtn {
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: var(--color-text, #e8e8e6);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.addBtn:hover { background: rgba(255,255,255,0.09); }
+
+.skillTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.skillTag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px 5px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--color-text, #e8e8e6);
+}
+
+.skillTagRemove {
+  background: none;
+  border: none;
+  color: var(--color-muted, #666);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.skillTagRemove:hover { color: #f87171; }
+
+.emptySkills {
+  font-size: 13px;
+  color: var(--color-muted, #555);
+  margin: 0;
+}
+
+/* ── Sticky save bar (mobile) ── */
+.stickyBar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 24px;
+  background: var(--color-bg, #0f0f10);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  z-index: 20;
+}
+
+@media (max-width: 600px) {
+  .stickyBar { display: block; }
+  .pageHeader .saveBtn { display: none; }
+}
+
+/* ── Loading ── */
+.loadingState {
+  padding: 60px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-muted, #666);
+}
