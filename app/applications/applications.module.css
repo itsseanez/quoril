@@ -163,6 +163,23 @@
 
 .appLink:hover { color: var(--ink); }
 
+.rejectBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.rejectBtn:hover {
+  color: var(--red);
+}
+
 .deleteBtn {
   display: flex;
   align-items: center;
@@ -175,7 +192,9 @@
   transition: color 0.15s;
 }
 
-.deleteBtn:hover { color: #f87171; }
+.deleteBtn:hover { 
+  color: var(--red); 
+}
 
 /* ── Status pills ── */
 .statusPill {

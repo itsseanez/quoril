@@ -236,7 +236,7 @@ export default async function DashboardPage() {
               <div className={styles.profileRow}>
                 <span className={styles.profileName}>{firstName}</span>
                 <div className={`${styles.intentBadge}`} style={{ fontSize: "11px", padding: "4px 10px" }}>
-                  {dbUser.experienceLevel ?? "entry"}
+                  {dbUser.experienceLevel  ?? "entry level"}
                 </div>
               </div>
 

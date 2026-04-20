@@ -52,6 +52,12 @@ const TrashIcon = () => (
   </svg>
 );
 
+const XIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </svg>
+);
+
 const ChevronIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="m9 18 6-6-6-6"/>
@@ -193,11 +199,12 @@ function AddModal({ onClose, onAdd }: {
 
 // ── application row ───────────────────────────────────────────────────────────
 
-function AppRow({ app, onStatusChange, onNotesChange, onDelete }: {
+function AppRow({ app, onStatusChange, onNotesChange, onDelete, onReject }: {
   app: Application;
   onStatusChange: (id: string, status: Status, interviewDate: string | null) => void;
   onNotesChange: (id: string, notes: string) => void;
   onDelete: (id: string) => void;
+  onReject: (id: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [notes, setNotes] = useState(app.notes ?? "");
@@ -289,6 +296,15 @@ function AppRow({ app, onStatusChange, onNotesChange, onDelete }: {
               </a>
             )}
             <StatusPill status={app.status} onClick={advanceStatus} />
+            {app.status !== "rejected" && (
+              <button
+                className={styles.rejectBtn}
+                onClick={() => onReject(app.id)}
+                title="Mark as rejected"
+              >
+                <XIcon />
+              </button>
+            )}
             <button
               className={styles.deleteBtn}
               onClick={() => onDelete(app.id)}
@@ -375,6 +391,17 @@ export default function ApplicationsPage() {
     fetch(`/api/applications/${id}`, { method: "DELETE" });
   }
 
+  function handleReject(id: string) {
+    setApps((prev) =>
+      prev.map((a) => a.id === id ? { ...a, status: "rejected" } : a)
+    );
+    fetch(`/api/applications/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "rejected" }),
+    });
+  }
+
   const filtered = filterStatus === "all"
     ? apps
     : apps.filter((a) => a.status === filterStatus);
@@ -444,6 +471,7 @@ export default function ApplicationsPage() {
                 onStatusChange={handleStatusChange}
                 onNotesChange={handleNotesChange}
                 onDelete={handleDelete}
+                onReject={handleReject}
               />
             ))}
           </div>
