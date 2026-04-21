@@ -275,7 +275,7 @@ function AppRow({ app, onStatusChange, onNotesChange, onDelete, onReject }: {
               <span>{app.company}</span>
               <span className={styles.dot}>·</span>
               <span>{appliedDate}</span>
-              {interviewDate && (
+              {interviewDate && app.status !== "rejected" && (
                 <>
                   <span className={styles.dot}>·</span>
                   <span className={styles.interviewBadge}>Interview {interviewDate}</span>

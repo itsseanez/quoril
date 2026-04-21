@@ -55,6 +55,7 @@ export default async function DashboardPage() {
   const upcomingInterviews = dbUser.applications
     .filter((a) => {
       if (!a.interviewDate) return false;
+      if (a.status === "rejected") return false;
       const d = new Date(a.interviewDate);
       d.setHours(0, 0, 0, 0);
       return d >= today;
@@ -115,17 +116,9 @@ export default async function DashboardPage() {
 
           {/* Left — actions + upcoming interviews */}
           <div className={styles.card}>
-            <div className={styles.cardHeader}>
-              <span className={styles.cardTitle}>This week's actions</span>
-              <Link href="/ai" className={styles.cardLink}>Full breakdown →</Link>
-            </div>
-
-            <AiActions userId={userId} />
-
             {/* Upcoming interviews — shown when relevant */}
             {upcomingInterviews.length > 0 && (
               <>
-                <div className={styles.divider} />
                 <div className={styles.upcomingList}>
                   <span className={styles.upcomingHeading}>Upcoming interviews</span>
                   {upcomingInterviews.map((app) => (
@@ -142,8 +135,16 @@ export default async function DashboardPage() {
                     </Link>
                   ))}
                 </div>
+                <div className={styles.divider} />
               </>
             )}
+
+            <div className={styles.cardHeader}>
+              <span className={styles.cardTitle}>Today's actions</span>
+              <Link href="/ai" className={styles.cardLink}>Full breakdown →</Link>
+            </div>
+
+            <AiActions userId={userId} />
           </div>
 
           {/* Right — profile sidebar */}
