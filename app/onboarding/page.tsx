@@ -1,10 +1,18 @@
 "use client";
 
+// app/onboarding/page.tsx
+//
+// Flow A (resume imported): Resume → Intent → Dashboard
+// Flow B (skipped):         Resume → Intent → Role → Skills → Dashboard
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./onboarding.module.css";
+import ResumeImport from "@/components/ResumeImport/ResumeImport";
 
-const STEPS = ["Intent", "Role", "Skills"];
+// "fast" path has 2 steps, "manual" path has 4
+const STEPS_FAST   = ["Resume", "Intent"];
+const STEPS_MANUAL = ["Resume", "Intent", "Role", "Skills"];
 
 const ArrowRight = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -13,18 +21,45 @@ const ArrowRight = () => (
 );
 
 export default function OnboardingPage() {
-  const router = useRouter();
-  const [step, setStep] = useState(0);
+  const router  = useRouter();
+  const [step, setStep]       = useState(0);
+  const [imported, setImported] = useState(false); // true = resume was fully imported
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
-    intentState: "",
-    targetRole: "",
+    intentState:     "",
+    targetRole:      "",
     experienceLevel: "",
-    skills: [] as string[],
-    location: "",
+    skills:          [] as string[],
+    location:        "",
   });
 
-  async function finish() {
+  const steps = imported ? STEPS_FAST : STEPS_MANUAL;
+
+  // Called when resume import + review completes successfully
+  function handleResumeComplete() {
+    setImported(true);
+    setStep(1); // go to intent
+  }
+
+  // Called when user skips the resume step
+  function handleResumeSkip() {
+    setImported(false);
+    setStep(1); // go to intent, then role + skills
+  }
+
+  async function finishWithIntent(intentState: string) {
+    // Fast path: resume was imported, just save intent and go to dashboard
+    setLoading(true);
+    await fetch("/api/profile/setup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...data, intentState }),
+    });
+    router.push("/dashboard");
+  }
+
+  async function finishManual() {
+    // Manual path: save everything and go to dashboard
     setLoading(true);
     await fetch("/api/profile/setup", {
       method: "POST",
@@ -44,7 +79,7 @@ export default function OnboardingPage() {
 
         {/* Progress bar */}
         <div className={styles.progress}>
-          {STEPS.map((_, i) => (
+          {steps.map((_, i) => (
             <div
               key={i}
               className={`${styles.progressStep} ${
@@ -58,32 +93,62 @@ export default function OnboardingPage() {
           ))}
         </div>
 
+        {/* ── Step 0: Resume ── */}
         {step === 0 && (
+          <div className={styles.stepContent}>
+            <p className={styles.stepMeta}>Step 1 of {steps.length}</p>
+            <h1 className={styles.stepTitle}>Import your resume</h1>
+            <p className={styles.stepSub}>
+              We'll auto-fill your profile from it. You can review everything before it saves.
+            </p>
+            <ResumeImport
+              onComplete={handleResumeComplete}
+              onSkip={handleResumeSkip}
+            />
+          </div>
+        )}
+
+        {/* ── Step 1: Intent ── */}
+        {step === 1 && (
           <IntentStep
             value={data.intentState}
             onChange={(v) => setData((d) => ({ ...d, intentState: v }))}
-            onNext={() => setStep(1)}
+            // Fast path: finish immediately after intent
+            onNext={imported
+              ? () => finishWithIntent(data.intentState)
+              : () => setStep(2)
+            }
+            onBack={() => setStep(0)}
+            stepLabel={`Step 2 of ${steps.length}`}
+            isFinal={imported}
+            loading={loading}
           />
         )}
-        {step === 1 && (
+
+        {/* ── Step 2: Role (manual path only) ── */}
+        {step === 2 && !imported && (
           <RoleStep
             value={data.targetRole}
             expValue={data.experienceLevel}
             onChange={(v) => setData((d) => ({ ...d, targetRole: v }))}
             onExpChange={(v) => setData((d) => ({ ...d, experienceLevel: v }))}
-            onNext={() => setStep(2)}
-            onBack={() => setStep(0)}
+            onNext={() => setStep(3)}
+            onBack={() => setStep(1)}
+            stepLabel="Step 3 of 4"
           />
         )}
-        {step === 2 && (
+
+        {/* ── Step 3: Skills (manual path only) ── */}
+        {step === 3 && !imported && (
           <SkillsStep
             skills={data.skills}
             location={data.location}
             onChange={(v) => setData((d) => ({ ...d, skills: v }))}
             onLocationChange={(v) => setData((d) => ({ ...d, location: v }))}
-            onBack={() => setStep(1)}
-            onFinish={finish}
+            onBack={() => setStep(2)}
+            onFinish={finishManual}
             loading={loading}
+            stepLabel="Step 4 of 4"
           />
         )}
       </div>
@@ -91,40 +156,36 @@ export default function OnboardingPage() {
   );
 }
 
+// ── Intent step ───────────────────────────────────────────────────────────────
+
 function IntentStep({
   value,
   onChange,
   onNext,
+  onBack,
+  stepLabel,
+  isFinal,
+  loading,
 }: {
   value: string;
   onChange: (v: string) => void;
   onNext: () => void;
+  onBack: () => void;
+  stepLabel: string;
+  isFinal: boolean;
+  loading?: boolean;
 }) {
   const options = [
-    {
-      id: "locked",
-      label: "I know exactly what I want",
-      sub: "e.g. Software Engineer Intern at a startup",
-    },
-    {
-      id: "hybrid",
-      label: "I have a direction but I'm open",
-      sub: "e.g. Something in backend or DevOps",
-    },
-    {
-      id: "exploratory",
-      label: "I'm still figuring it out",
-      sub: "Show me what's out there",
-    },
+    { id: "locked",      label: "I know exactly what I want",     sub: "e.g. Software Engineer Intern at a startup" },
+    { id: "hybrid",      label: "I have a direction but I'm open", sub: "e.g. Something in backend or DevOps" },
+    { id: "exploratory", label: "I'm still figuring it out",       sub: "Show me what's out there" },
   ];
 
   return (
     <div className={styles.stepContent}>
-      <p className={styles.stepMeta}>Step 1 of 3</p>
+      <p className={styles.stepMeta}>{stepLabel}</p>
       <h1 className={styles.stepTitle}>Where are you in your search?</h1>
-      <p className={styles.stepSub}>
-        This shapes how Quoril ranks and recommends jobs for you.
-      </p>
+      <p className={styles.stepSub}>This shapes how Quoril ranks and recommends jobs for you.</p>
 
       <div className={styles.intentGrid}>
         {options.map((o) => {
@@ -148,15 +209,22 @@ function IntentStep({
       </div>
 
       <div className={styles.actions}>
+        <button className={styles.btnBack} onClick={onBack}>Back</button>
         <div className={styles.actionsRight}>
-          <button className={styles.btnNext} onClick={onNext} disabled={!value}>
-            Continue <ArrowRight />
+          <button
+            className={isFinal ? styles.btnFinish : styles.btnNext}
+            onClick={onNext}
+            disabled={!value || loading}
+          >
+            {loading ? "Setting up…" : isFinal ? <>Go to dashboard <ArrowRight /></> : <>Continue <ArrowRight /></>}
           </button>
         </div>
       </div>
     </div>
   );
 }
+
+// ── Role step ─────────────────────────────────────────────────────────────────
 
 function RoleStep({
   value,
@@ -165,6 +233,7 @@ function RoleStep({
   onExpChange,
   onNext,
   onBack,
+  stepLabel,
 }: {
   value: string;
   expValue: string;
@@ -172,20 +241,19 @@ function RoleStep({
   onExpChange: (v: string) => void;
   onNext: () => void;
   onBack: () => void;
+  stepLabel: string;
 }) {
   const levels = [
-    { id: "entry", label: "Entry level" },
-    { id: "mid", label: "Mid level" },
-    { id: "senior", label: "Senior" },
+    { id: "entry",  label: "Entry level" },
+    { id: "mid",    label: "Mid level"   },
+    { id: "senior", label: "Senior"      },
   ];
 
   return (
     <div className={styles.stepContent}>
-      <p className={styles.stepMeta}>Step 2 of 3</p>
+      <p className={styles.stepMeta}>{stepLabel}</p>
       <h1 className={styles.stepTitle}>What role are you after?</h1>
-      <p className={styles.stepSub}>
-        Don't worry if you're not sure — you can update this anytime.
-      </p>
+      <p className={styles.stepSub}>Don't worry if you're not sure — you can update this anytime.</p>
 
       <div className={styles.fieldGroup}>
         <div className={styles.field}>
@@ -197,7 +265,6 @@ function RoleStep({
             onChange={(e) => onChange(e.target.value)}
           />
         </div>
-
         <div className={styles.field}>
           <label className={styles.label}>Experience level</label>
           <div className={styles.levelGroup}>
@@ -215,9 +282,7 @@ function RoleStep({
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.btnBack} onClick={onBack}>
-          Back
-        </button>
+        <button className={styles.btnBack} onClick={onBack}>Back</button>
         <div className={styles.actionsRight}>
           <button className={styles.btnNext} onClick={onNext} disabled={!expValue}>
             Continue <ArrowRight />
@@ -228,6 +293,8 @@ function RoleStep({
   );
 }
 
+// ── Skills step ───────────────────────────────────────────────────────────────
+
 function SkillsStep({
   skills,
   location,
@@ -236,6 +303,7 @@ function SkillsStep({
   onBack,
   onFinish,
   loading,
+  stepLabel,
 }: {
   skills: string[];
   location: string;
@@ -244,6 +312,7 @@ function SkillsStep({
   onBack: () => void;
   onFinish: () => void;
   loading: boolean;
+  stepLabel: string;
 }) {
   const [input, setInput] = useState("");
 
@@ -261,11 +330,9 @@ function SkillsStep({
 
   return (
     <div className={styles.stepContent}>
-      <p className={styles.stepMeta}>Step 3 of 3</p>
+      <p className={styles.stepMeta}>{stepLabel}</p>
       <h1 className={styles.stepTitle}>Skills & location</h1>
-      <p className={styles.stepSub}>
-        Add the technologies and tools you know. These power your job match scores.
-      </p>
+      <p className={styles.stepSub}>Add the technologies and tools you know. These power your job match scores.</p>
 
       <div className={styles.fieldGroup}>
         <div className={styles.field}>
@@ -276,35 +343,21 @@ function SkillsStep({
               placeholder="e.g. React, Python, SQL"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addSkill();
-                }
-              }}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSkill(); } }}
             />
-            <button className={styles.addBtn} onClick={addSkill}>
-              Add
-            </button>
+            <button className={styles.addBtn} onClick={addSkill}>Add</button>
           </div>
           {skills.length > 0 && (
             <div className={styles.skillTags}>
               {skills.map((s) => (
                 <span key={s} className={styles.skillTag}>
                   {s}
-                  <button
-                    className={styles.skillTagRemove}
-                    onClick={() => removeSkill(s)}
-                    aria-label={`Remove ${s}`}
-                  >
-                    ×
-                  </button>
+                  <button className={styles.skillTagRemove} onClick={() => removeSkill(s)} aria-label={`Remove ${s}`}>×</button>
                 </span>
               ))}
             </div>
           )}
         </div>
-
         <div className={styles.field}>
           <label className={styles.label}>Location</label>
           <input
@@ -317,17 +370,10 @@ function SkillsStep({
       </div>
 
       <div className={styles.actions}>
-        <button className={styles.btnBack} onClick={onBack}>
-          Back
-        </button>
+        <button className={styles.btnBack} onClick={onBack}>Back</button>
         <div className={styles.actionsRight}>
-          <button
-            className={styles.btnFinish}
-            onClick={onFinish}
-            disabled={loading}
-          >
-            {loading ? "Setting up…" : "Finish setup"}
-            {!loading && <ArrowRight />}
+          <button className={styles.btnFinish} onClick={onFinish} disabled={loading}>
+            {loading ? "Setting up…" : <>Finish setup <ArrowRight /></>}
           </button>
         </div>
       </div>

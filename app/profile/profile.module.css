@@ -175,11 +175,11 @@
 
 .intentOption:hover {
   background: var(--paper);
-  border-color: rgba(0,0,0,0.14);
+  border-color: var(--accent-warm);
 }
 
 .intentOptionSelected {
-  background: var(--surface);
+  background: var(--paper);
   border-color: var(--accent-warm);
 }
 
@@ -258,6 +258,435 @@
 
 .input:focus { border-color: var(--ink-3); }
 .input::placeholder { color: var(--ink-3); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   APPEND these rules to your existing app/profile/profile.module.css
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Work history ── */
+.workList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.workItem {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.workTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.workMeta {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.workDates {
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.workSummary {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+/* ── Resume section ── */
+.resumeCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.resumeInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.resumeFileName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resumeMeta {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  margin-top: 2px;
+}
+
+.resumeReplaceBtn {
+  padding: 7px 16px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.resumeReplaceBtn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+
+.resumeEmpty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.resumeEmptyText {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+  font-style: italic;
+  flex: 1;
+}
+
+.resumeUploadBtn {
+  padding: 8px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.resumeUploadBtn:hover {
+  opacity: 0.85;
+}
+
+.resumeImportWrap {
+  margin-top: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   APPEND these rules to your existing app/profile/profile.module.css
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Work history ── */
+.workList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.workItem {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.workTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.workMeta {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.workDates {
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.workSummary {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+/* ── Resume section ── */
+.resumeCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.resumeInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.resumeFileName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resumeMeta {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  margin-top: 2px;
+}
+
+.resumeReplaceBtn {
+  padding: 7px 16px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.resumeReplaceBtn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+
+.resumeEmpty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.resumeEmptyText {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+  font-style: italic;
+  flex: 1;
+}
+
+.resumeUploadBtn {
+  padding: 8px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.resumeUploadBtn:hover {
+  opacity: 0.85;
+}
+
+.resumeImportWrap {
+  margin-top: 4px;
+}
+
+/* ── Work history editor ── */
+.workEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.workItemEditing {
+  background: var(--surface);
+  border-color: var(--accent-warm) !important;
+}
+
+.workItemActions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-top: .6rem;
+}
+
+.workActionBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.workActionBtn:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+
+.workDraftForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.workDraftRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.workDraftField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.workDraftLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.workDraftTextarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.currentCheckLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.workDraftActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workSaveBtn {
+  padding: 8px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.workSaveBtn:hover:not(:disabled) { opacity: 0.85; }
+.workSaveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.addWorkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  margin-top: 4px;
+}
+
+.addWorkBtn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink-2);
+}
+
+.btnBack {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 8px 4px;
+  transition: color 0.15s;
+}
+
+.btnBack:hover { color: var(--ink-2); }
+
+@media (max-width: 520px) {
+  .workDraftRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Projects ── */
+.projectLink {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  color: var(--ink-3);
+  transition: color 0.15s;
+  vertical-align: middle;
+}
+
+.projectLink:hover {
+  color: var(--accent-warm);
+}
+
+.projectTechStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.projectTechTag {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 2px 9px;
+}
 
 /* ── Level pills ── */
 .levelGroup {
@@ -400,4 +829,130 @@
     text-align: center;
     justify-content: center;
   }
+}
+
+/* ── Work history ── */
+.workList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.workItem {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.workTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.workMeta {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.workDates {
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.workSummary {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+/* ── Resume section ── */
+.resumeCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.resumeInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.resumeFileName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resumeMeta {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  margin-top: 2px;
+}
+
+.resumeReplaceBtn {
+  padding: 7px 16px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.resumeReplaceBtn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+
+.resumeEmpty {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.resumeEmptyText {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+  font-style: italic;
+  flex: 1;
+}
+
+.resumeUploadBtn {
+  padding: 8px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.resumeUploadBtn:hover {
+  opacity: 0.85;
+}
+
+.resumeImportWrap {
+  margin-top: 4px;
 }

@@ -11,7 +11,13 @@ export async function GET() {
     currentUser(),
     prisma.user.findUnique({
       where: { id: userId },
-      include: { skills: true },
+      include: {
+        skills: true,
+        applications: true,
+        resume: true,
+        workHistory: { orderBy: { order: "asc" } },
+        projects:    { orderBy: { order: "asc" } },
+      },
     }),
   ]);
 
@@ -19,15 +25,40 @@ export async function GET() {
 
   return Response.json({
     user: {
-      id: dbUser.id,
-      email: dbUser.email,
-      firstName: clerkUser?.firstName ?? "",
-      lastName: clerkUser?.lastName ?? "",
-      targetRole: dbUser.targetRole,
+      id:              dbUser.id,
+      email:           dbUser.email,
+      firstName:       clerkUser?.firstName ?? "",
+      lastName:        clerkUser?.lastName ?? "",
+      targetRole:      dbUser.targetRole,
       experienceLevel: dbUser.experienceLevel,
-      intentState: dbUser.intentState,
-      location: dbUser.location,
-      skills: dbUser.skills.map((s) => s.name),
+      intentState:     dbUser.intentState,
+      location:        dbUser.location,
+      skills:          dbUser.skills.map((s) => s.name),
+      resume:          dbUser.resume
+        ? {
+            fileName:   dbUser.resume.fileName,
+            fileUrl:    dbUser.resume.fileUrl,
+            uploadedAt: dbUser.resume.uploadedAt.toISOString(),
+            parsedAt:   dbUser.resume.parsedAt?.toISOString() ?? null,
+          }
+        : null,
+      projects: dbUser.projects.map((p) => ({
+        id:          p.id,
+        name:        p.name,
+        description: p.description,
+        url:         p.url,
+        techStack:   p.techStack,
+        startDate:   p.startDate?.toISOString() ?? null,
+        endDate:     p.endDate?.toISOString()   ?? null,
+      })),
+      workHistory: dbUser.workHistory.map((w) => ({
+        id:        w.id,
+        company:   w.company,
+        title:     w.title,
+        startDate: w.startDate?.toISOString() ?? null,
+        endDate:   w.endDate?.toISOString()   ?? null,
+        summary:   w.summary,
+      })),
     },
   });
 }
@@ -41,10 +72,10 @@ export async function PATCH(req: Request) {
   await prisma.user.update({
     where: { id: userId },
     data: {
-      ...(targetRole   !== undefined && { targetRole }),
+      ...(targetRole      !== undefined && { targetRole }),
       ...(experienceLevel !== undefined && { experienceLevel }),
-      ...(intentState  !== undefined && { intentState }),
-      ...(location     !== undefined && { location }),
+      ...(intentState     !== undefined && { intentState }),
+      ...(location        !== undefined && { location }),
     },
   });
 

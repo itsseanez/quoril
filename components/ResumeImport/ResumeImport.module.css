@@ -1,0 +1,537 @@
+/* components/ResumeImport/ResumeImport.module.css */
+
+.root {
+  width: 100%;
+}
+
+/* ── Upload zone ── */
+.uploadZoneWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.uploadZone {
+  border: 1.5px dashed var(--border);
+  border-radius: 14px;
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.uploadZone:hover {
+  border-color: var(--accent-warm);
+  background: var(--paper);
+}
+
+.uploadZoneDragging {
+  border-color: var(--accent-warm);
+  background: var(--paper);
+}
+
+.uploadIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-warm);
+  margin-bottom: 4px;
+}
+
+.uploadTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.uploadSub {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.uploadError {
+  font-size: 12px;
+  color: #c0392b;
+  margin-top: 4px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* ── Existing resume banner ── */
+.existingBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.existingLabel {
+  font-weight: 500;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.existingName {
+  color: var(--ink);
+  font-weight: 400;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.existingDate {
+  color: var(--ink-3);
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+/* ── Error / skip ── */
+.errorBanner {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #fdf0ef;
+  border: 1px solid #f5c6c3;
+  font-size: 13px;
+  color: #c0392b;
+}
+
+.skipRow {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.skipBtn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.skipBtn:hover {
+  color: var(--ink-2);
+}
+
+/* ── Parsing state ── */
+.parsingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+.parsingTitle {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.parsingSub {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+/* ── Spinner ── */
+.spinner {
+  animation: spin 0.8s linear infinite;
+  color: var(--accent-warm);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Review screen ── */
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.reviewHeader {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.reviewTitle {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.reviewSub {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.reviewSections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewSection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reviewSectionTitle {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.reviewField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reviewLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.reviewInput {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--ink);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.reviewInput:focus {
+  border-color: var(--accent-warm);
+}
+
+/* ── Level pills ── */
+.levelGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.levelPill {
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: var(--paper);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  text-transform: capitalize;
+}
+
+.levelPillSelected {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Skills ── */
+.skillInputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.addBtn {
+  padding: 9px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.addBtn:hover {
+  background: var(--paper);
+  border-color: var(--ink-3);
+}
+
+.skillTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skillTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-2);
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 4px 10px 4px 11px;
+}
+
+.skillTagRemove {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--ink-3);
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.skillTagRemove:hover {
+  color: var(--ink);
+}
+
+.emptyNote {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ── Work history ── */
+.workList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.workItem {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.workItemLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.workTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.workMeta {
+  font-size: 12px;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+.workDates {
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.workSummary {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 300;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.workRemoveBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-3);
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.workRemoveBtn:hover {
+  color: var(--ink);
+}
+
+/* ── Review actions ── */
+.reviewActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.btnBack {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 8px 4px;
+  transition: color 0.15s;
+}
+
+.btnBack:hover:not(:disabled) {
+  color: var(--ink-2);
+}
+
+.btnBack:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btnConfirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btnConfirm:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.btnConfirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Projects (review screen) ── */
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.projectItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 14px 12px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.projectItemHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.projectItemLeft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.projectNameInput {
+  font-weight: 500;
+}
+
+.projectUrlInput {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.projectDescInput {
+  resize: vertical;
+  min-height: 48px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.projectTechRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.techTag {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.techInput {
+  font-size: 12px;
+}
+
+.ongoingBadge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 2px 9px;
+  align-self: flex-start;
+}

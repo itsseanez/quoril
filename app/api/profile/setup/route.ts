@@ -13,10 +13,19 @@ export async function POST(req: Request) {
 
   const { intentState, targetRole, experienceLevel, skills, location } = await req.json();
 
+  // Only include fields that were actually sent — avoids overwriting
+  // resume-imported values with empty strings from the fast onboarding path
+  const updateData = {
+    ...(intentState     !== undefined && intentState     !== "" && { intentState }),
+    ...(targetRole      !== undefined && targetRole      !== "" && { targetRole }),
+    ...(experienceLevel !== undefined && experienceLevel !== "" && { experienceLevel }),
+    ...(location        !== undefined && location        !== "" && { location }),
+  };
+
   await prisma.user.upsert({
     where: { id: userId },
-    update: { intentState, targetRole, experienceLevel, location },
-    create: { id: userId, email, intentState, targetRole, experienceLevel, location },
+    update: updateData,
+    create: { id: userId, email, intentState: intentState ?? "exploratory", ...updateData },
   });
 
   if (skills?.length) {
