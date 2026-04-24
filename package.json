@@ -7,7 +7,9 @@
     "build": "prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@adobe/pdfservices-node-sdk": "^4.1.0",
@@ -33,6 +35,7 @@
     "eslint-config-next": "16.2.2",
     "prisma": "^7.6.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.5"
   }
 }
