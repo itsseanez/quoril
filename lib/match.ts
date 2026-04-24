@@ -22,9 +22,13 @@ export interface ScoringJob {
   description: string;
   location: string | null;
   remote: boolean;
+  // Populated by the ingestion pipeline — optional so the scorer stays
+  // backwards-compatible with jobs ingested before these fields existed.
+  seniorityLevel?: string | null;
+  extractedSkills?: string[];
 }
 
-// ── helpers ──────────────────────────────────────────────────────────────────
+// ── helpers ───────────────────────────────────────────────────────────────────
 
 function tokenize(str: string): string[] {
   return str.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
@@ -47,13 +51,32 @@ function titleScore(user: ScoringUser, job: ScoringJob): number {
   return Math.round(overlap * 30);
 }
 
-/** 0–30: fraction of user skills mentioned in the job description */
+/**
+ * 0–30: fraction of user skills found in the job.
+ *
+ * Uses extractedSkills (set intersection) when available — faster and more
+ * precise than substring-searching the full description. Falls back to
+ * description search for jobs ingested before skill extraction was added.
+ */
 function skillScore(user: ScoringUser, job: ScoringJob): number {
   if (user.skills.length === 0) return 10;
+
+  const extractedSkills = job.extractedSkills ?? [];
+
+  if (extractedSkills.length > 0) {
+    const jobSkillSet = new Set(extractedSkills.map((s) => s.toLowerCase()));
+    const hits = user.skills.filter((s) =>
+      jobSkillSet.has(s.name.toLowerCase())
+    ).length;
+    return Math.round((hits / user.skills.length) * 30);
+  }
+
+  // Fallback: substring search against plain-text description
   const desc = job.description.toLowerCase();
-  const hits = user.skills.filter((s) => desc.includes(s.name.toLowerCase())).length;
-  const ratio = hits / user.skills.length;
-  return Math.round(ratio * 30);
+  const hits = user.skills.filter((s) =>
+    desc.includes(s.name.toLowerCase())
+  ).length;
+  return Math.round((hits / user.skills.length) * 30);
 }
 
 /** 0–20: location compatibility */
@@ -64,7 +87,7 @@ function locationScore(user: ScoringUser, job: ScoringJob): number {
   const uLoc = user.location.toLowerCase();
   const jLoc = job.location.toLowerCase();
 
-  // Exact city/state match
+  // Exact match
   if (uLoc === jLoc) return 20;
 
   // Partial match (e.g. "San Francisco" in "San Francisco, CA")
@@ -76,13 +99,62 @@ function locationScore(user: ScoringUser, job: ScoringJob): number {
   return 4; // different location
 }
 
-/** 0–10: experience level keywords in description */
+/**
+ * 0–10: experience level match.
+ *
+ * Uses seniorityLevel from the job model when available — a structured enum
+ * derived at ingest time from the job title. Falls back to keyword-scanning
+ * the title + description for jobs ingested before this field existed.
+ */
 function experienceScore(user: ScoringUser, job: ScoringJob): number {
   if (!user.experienceLevel) return 5;
 
-  const desc = job.description.toLowerCase();
+  if (job.seniorityLevel) {
+    return scoreBySeniorityLevel(user.experienceLevel, job.seniorityLevel);
+  }
+
+  // Fallback: keyword scan
+  return scoreByKeywords(user.experienceLevel, job);
+}
+
+/**
+ * Maps user experienceLevel → acceptable seniorityLevel values, then scores
+ * based on exact match, adjacent level (partial credit), or mismatch.
+ *
+ * Seniority ladder (index = distance):
+ *   intern → junior → mid → senior → staff → principal → exec
+ */
+function scoreBySeniorityLevel(
+  userLevel: string,
+  jobSeniority: string
+): number {
+  const ladder = ["intern", "junior", "mid", "senior", "staff", "principal", "exec"];
+
+  // Map user's experienceLevel values to ladder entries
+  const userLevelMap: Record<string, string> = {
+    entry:  "junior",
+    mid:    "mid",
+    senior: "senior",
+  };
+
+  const mappedUser = userLevelMap[userLevel] ?? userLevel;
+  const userIdx = ladder.indexOf(mappedUser);
+  const jobIdx  = ladder.indexOf(jobSeniority);
+
+  // Can't score if either value isn't on the ladder
+  if (userIdx === -1 || jobIdx === -1) return 5;
+
+  const distance = Math.abs(userIdx - jobIdx);
+  if (distance === 0) return 10; // exact match
+  if (distance === 1) return 6;  // adjacent level — partial credit
+  if (distance === 2) return 3;  // two levels off
+  return 1;                       // clear mismatch
+}
+
+function scoreByKeywords(userLevel: string, job: ScoringJob): number {
+  const desc  = job.description.toLowerCase();
   const title = job.title.toLowerCase();
-  const text = `${title} ${desc}`;
+  const text  = `${title} ${desc}`;
 
   const levelKeywords: Record<string, string[]> = {
     entry:  ["entry", "junior", "associate", "intern", "new grad", "graduate", "0-2", "1-2"],
@@ -90,12 +162,11 @@ function experienceScore(user: ScoringUser, job: ScoringJob): number {
     senior: ["senior", "sr.", "sr ", "lead", "staff", "principal", "5+", "7+", "8+"],
   };
 
-  const userKeywords = levelKeywords[user.experienceLevel] ?? [];
+  const userKeywords = levelKeywords[userLevel] ?? [];
   const hit = userKeywords.some((kw) => text.includes(kw));
   if (hit) return 10;
 
-  // Penalty for clear mismatch (e.g. entry applying to senior)
-  const otherLevels = Object.entries(levelKeywords).filter(([k]) => k !== user.experienceLevel);
+  const otherLevels = Object.entries(levelKeywords).filter(([k]) => k !== userLevel);
   const mismatch = otherLevels.some(([, kws]) => kws.some((kw) => text.includes(kw)));
   if (mismatch) return 2;
 
@@ -103,7 +174,7 @@ function experienceScore(user: ScoringUser, job: ScoringJob): number {
 }
 
 /** 0–10: intent-based adjustment */
-function intentScore(user: ScoringUser, job: ScoringJob, baseScore: number): number {
+function intentScore(user: ScoringUser, _job: ScoringJob, baseScore: number): number {
   switch (user.intentState) {
     case "locked":
       // Amplify strong matches, suppress weak ones
@@ -122,7 +193,7 @@ function intentScore(user: ScoringUser, job: ScoringJob, baseScore: number): num
   }
 }
 
-// ── main export ───────────────────────────────────────────────────────────────
+// ── main exports ──────────────────────────────────────────────────────────────
 
 export function scoreJob(user: ScoringUser, job: ScoringJob): number {
   const t = titleScore(user, job);

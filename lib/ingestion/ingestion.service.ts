@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { ATSAdapter } from "./base.adapter";
 import { NormalizedJob, IngestResult } from "./types";
+import { extractSkills } from "./utils/skills";
 
 export class IngestionService {
   /**
@@ -102,9 +103,12 @@ export class IngestionService {
   }
 
   private async upsertJob(job: NormalizedJob): Promise<void> {
+    const extractedSkills = extractSkills(job.description);
+
     await prisma.job.upsert({
       where: { sourceJobId: job.sourceJobId },
       create: {
+        extractedSkills,
         sourceJobId: job.sourceJobId,
         title: job.title,
         company: job.company,
@@ -125,6 +129,7 @@ export class IngestionService {
         lastSeenAt: new Date(),
       },
       update: {
+        extractedSkills,
         title: job.title,
         location: job.location,
         remote: job.remote,
