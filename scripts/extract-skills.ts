@@ -1,89 +1,149 @@
-import { prisma } from "../lib/prisma";
-import { extractSkillsWithAI } from "../lib/ingestion/utils/skills";
+// scripts/extract-skills.ts
+//
+// Backfill extracted skills for all active jobs that don't have them yet.
+// Uses Groq API with exponential backoff to handle rate limits.
+//
+// Usage:
+//   npm run extract-skills              — process all jobs missing skills
+//   npm run extract-skills -- stripe    — process only jobs from a specific company
 
-const BATCH_SIZE = 5;      // smaller batch = safer for rate limits
-const DELAY_MS = 300;      // small spacing between requests
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
+import { extractSkillsWithAI, extractSkills } from "../lib/ingestion/utils/skills";
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
+const BATCH_SIZE = 3;    // 3 concurrent requests per batch
+const DELAY_MS   = 2000; // 2s between batches — stays under Groq free tier (~30 req/min)
 
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// 🔁 retry wrapper for 429s / transient failures
 async function withRetry<T>(
   fn: () => Promise<T>,
-  retries = 3
+  retries = 3,
+  delayMs = 2000
 ): Promise<T> {
-  try {
-    return await fn();
-  } catch (err: any) {
-    const isRateLimit = err?.message?.includes("429");
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const is429 =
+        err instanceof Error &&
+        (err.message.includes("429") || err.message.includes("rate limit"));
 
-    if (isRateLimit && retries > 0) {
-      console.warn("Rate limited. Retrying in 1s...");
-      await sleep(1000);
-      return withRetry(fn, retries - 1);
+      if (is429 && attempt < retries) {
+        const wait = delayMs * attempt; // 2s, 4s, 6s
+        console.warn(
+          `    Rate limited, retrying in ${wait}ms (attempt ${attempt}/${retries})`
+        );
+        await sleep(wait);
+      } else {
+        throw err;
+      }
     }
-
-    throw err;
   }
+  throw new Error("Max retries exceeded");
 }
 
 async function main() {
+  const companyFilter = process.argv[2]; // optional: target a single company
+
   const jobs = await prisma.job.findMany({
     where: {
-      extractedSkills: { isEmpty: true },
       isActive: true,
+      extractedSkills: { isEmpty: true },
+      ...(companyFilter ? { company: { contains: companyFilter, mode: "insensitive" } } : {}),
     },
-    select: {
-      id: true,
-      description: true,
-      title: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+    select: { id: true, description: true, title: true, company: true },
+    orderBy: { createdAt: "desc" },
   });
 
-  console.log(`Found ${jobs.length} jobs needing skill extraction`);
+  console.log(
+    companyFilter
+      ? `Found ${jobs.length} jobs for "${companyFilter}" needing skill extraction`
+      : `Found ${jobs.length} jobs needing skill extraction`
+  );
+
+  if (jobs.length === 0) {
+    console.log("Nothing to do.");
+    return;
+  }
 
   let processed = 0;
+  let usedFallback = 0;
   let failed = 0;
 
   for (let i = 0; i < jobs.length; i += BATCH_SIZE) {
     const batch = jobs.slice(i, i + BATCH_SIZE);
 
-    for (const job of batch) {
-      try {
-        const skills = await withRetry(() =>
-          extractSkillsWithAI(job.description)
-        );
+    await Promise.all(
+      batch.map(async (job) => {
+        try {
+          const skills = await withRetry(() =>
+            extractSkillsWithAI(job.description)
+          );
 
-        await prisma.job.update({
-          where: { id: job.id },
-          data: { extractedSkills: skills },
-        });
+          await prisma.job.update({
+            where: { id: job.id },
+            data: { extractedSkills: skills },
+          });
 
-        console.log(`✓ ${job.title} → [${skills.join(", ")}]`);
-        processed++;
+          console.log(
+            `  ✓ [${job.company}] ${job.title}\n    → [${skills.join(", ")}]`
+          );
+          processed++;
+        } catch (err) {
+          console.error(
+            `  ✗ [${job.company}] ${job.title}:`,
+            err instanceof Error ? err.message : err
+          );
 
-        await sleep(DELAY_MS);
-      } catch (err) {
-        console.error(`✗ ${job.title}:`, err);
-        failed++;
-      }
-    }
-
-    console.log(
-      `Progress: ${Math.min(i + BATCH_SIZE, jobs.length)}/${jobs.length}`
+          // Fall back to static extraction so the field is never left empty
+          try {
+            const fallback = extractSkills(job.description);
+            await prisma.job.update({
+              where: { id: job.id },
+              data: { extractedSkills: fallback },
+            });
+            console.log(
+              `    ↩ Static fallback → [${fallback.join(", ")}]`
+            );
+            usedFallback++;
+          } catch (fallbackErr) {
+            console.error(
+              `    ✗ Fallback also failed:`,
+              fallbackErr instanceof Error ? fallbackErr.message : fallbackErr
+            );
+            failed++;
+          }
+        }
+      })
     );
+
+    const progress = Math.min(i + BATCH_SIZE, jobs.length);
+    console.log(`\nProgress: ${progress}/${jobs.length}`);
+
+    // Pause between batches to respect rate limits
+    if (progress < jobs.length) await sleep(DELAY_MS);
   }
 
-  console.log(`\nDone. Processed: ${processed}, Failed: ${failed}`);
+  console.log(`
+Done.
+  ✓ AI extraction:      ${processed}
+  ↩ Static fallback:    ${usedFallback}
+  ✗ Failed:             ${failed}
+  Total:                ${jobs.length}
+  `);
 }
 
 main()
   .catch((err) => {
-    console.error(err);
+    console.error("Unhandled error:", err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

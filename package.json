@@ -10,7 +10,12 @@
     "postinstall": "prisma generate",
     "test": "vitest run",
     "test:watch": "vitest",
-    "extract-skills": "dotenv -e .env -- tsx scripts/extract-skills.ts"
+    "seed": "dotenv -e .env.local -- tsx prisma/seed.ts",
+    "extract-skills": "dotenv -e .env -- tsx scripts/extract-skills.ts",
+    "ingest": "dotenv -e .env.local -- tsx scripts/ingest.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@adobe/pdfservices-node-sdk": "^4.1.0",

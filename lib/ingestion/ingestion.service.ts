@@ -98,7 +98,6 @@ export class IngestionService {
         // Failures are already logged inside runAdapter
       }
     }
-
     return results;
   }
 
