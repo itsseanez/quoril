@@ -106,6 +106,8 @@ model Job {
   
   applications    Application[]
   savedBy         SavedJob[]
+  companyId   String?
+  companyRef  Company? @relation(fields: [companyId], references: [id])
 
   @@index([source])
   @@index([companySlug])
@@ -129,6 +131,25 @@ model IngestionRun {
 
   @@index([source])
   @@index([startedAt])
+}
+
+model Company {
+  id              String    @id @default(cuid())
+  name            String    @unique
+  logoUrl         String?
+  website         String?
+  isActive        Boolean   @default(true)
+
+  greenhouseSlug  String?   @unique
+  leverSite       String?   @unique
+  ashbyBoardId    String?   @unique
+  workdayTenant   String?
+  workdayInstance String?   // "wd1" | "wd2" | "wd3" | "wd5"
+  workdaySiteName String?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  jobs            Job[]
 }
 
 model Application {
