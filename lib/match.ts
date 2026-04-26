@@ -9,12 +9,19 @@
 //   Experience level match       10 pts
 //   Intent multiplier            10 pts
 
+import { workHistoryScore } from "@/lib/matching/work-history-score";
+import { projectScore } from "@/lib/matching/project-score";
+import { fingerprintJob } from "@/lib/matching/fingerprint";
+import { UserSignals } from "@/lib/matching/feedback-engine";
+
 export interface ScoringUser {
   targetRole: string | null;
   intentState: string;
   experienceLevel: string | null;
   location: string | null;
   skills: { name: string }[];
+  workHistory?: { title: string; company: string; summary?: string | null }[];
+  projects?: { techStack: string[]; description?: string | null }[];
 }
 
 export interface ScoringJob {
@@ -22,10 +29,10 @@ export interface ScoringJob {
   description: string;
   location: string | null;
   remote: boolean;
-  // Populated by the ingestion pipeline — optional so the scorer stays
-  // backwards-compatible with jobs ingested before these fields existed.
   seniorityLevel?: string | null;
   extractedSkills?: string[];
+  companySlug?: string;
+  department?: string | null;
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -195,14 +202,60 @@ function intentScore(user: ScoringUser, _job: ScoringJob, baseScore: number): nu
 
 // ── main exports ──────────────────────────────────────────────────────────────
 
-export function scoreJob(user: ScoringUser, job: ScoringJob): number {
+export function scoreJob(
+  user: ScoringUser,
+  job: ScoringJob,
+  signals?: UserSignals // optional — omit for backwards compat
+): number {
+  // Existing signals (0–90)
   const t = titleScore(user, job);
   const s = skillScore(user, job);
   const l = locationScore(user, job);
   const e = experienceScore(user, job);
-  const base = t + s + l + e; // 0–90
-  const i = intentScore(user, job, base); // 0–10
-  return Math.min(100, base + i);
+
+  // New signals (0–25)
+  const w = workHistoryScore(user.workHistory ?? [], job);
+  const p = projectScore(user.projects ?? [], job);
+
+  const base = t + s + l + e + w + p; // 0–115, capped below
+
+  // Intent adjustment (0–10)
+  const i = intentScore(user, job, base);
+
+  let score = Math.min(100, base + i);
+
+  // ── Feedback signals ──────────────────────────────────────────────────────
+
+  if (signals) {
+    // Company boost — user has had positive outcomes here before
+    if (job.companySlug) {
+      const boost = signals.companyBoosts.get(job.companySlug) ?? 0;
+      score = Math.min(100, score + boost);
+    }
+
+    // Suppression penalty — similar to a job they were rejected from
+    const fingerprint = fingerprintJob(job);
+    if (signals.suppressedFingerprints.has(fingerprint)) {
+      score = Math.max(0, score - 20);
+    }
+
+    // Skill weight adjustment — re-weight based on outcome history
+    if (user.skills.length > 0 && signals.skillWeights.size > 0) {
+      const weightedHits = user.skills.reduce((sum, skill) => {
+        const weight = signals.skillWeights.get(skill.name.toLowerCase()) ?? 1.0;
+        const jobSkills = job.extractedSkills?.map((s) => s.toLowerCase()) ?? [];
+        const hit = jobSkills.includes(skill.name.toLowerCase()) ? 1 : 0;
+        return sum + hit * weight;
+      }, 0);
+
+      const baseSkillPts = skillScore(user, job);
+      const weightedSkillPts = Math.round((weightedHits / user.skills.length) * 30);
+      const delta = weightedSkillPts - baseSkillPts;
+      score = Math.min(100, Math.max(0, score + delta));
+    }
+  }
+
+  return score;
 }
 
 export function scoreLabel(score: number): "Great match" | "Good match" | "Partial match" | "Low match" {

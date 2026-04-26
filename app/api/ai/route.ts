@@ -29,18 +29,27 @@ ${ctx}`,
 Based on this developer's current situation, give them 5 concrete next actions to take this week.
 
 Each action should be one sentence naming exactly what to do — specific to their actual data.
-Follow each action with one sentence explaining why it matters right now.
 Write it as a plain numbered list with no sub-bullets or headers.
 Do not suggest anything generic like "update your LinkedIn" unless their data specifically supports it.
+
+If a SKILL GAP ANALYSIS section is present in the context, at least one action must directly address
+the most impactful gap — name the specific skill and suggest one concrete step to close it this week,
+such as a specific project, open source contribution, or thing to build.
 
 ${ctx}`,
 
   skills: (ctx) => `
 You are reviewing this developer's skills against their target role. Identify the 3-5 most important gaps.
 
-For each gap write two sentences: what the skill is and why it matters for their specific target role, then one concrete way to address it — name an actual resource, project type, or technology.
+For each gap write two sentences: what the skill is and why it matters for their specific target role,
+then one concrete way to address it — name an actual resource, project type, or technology.
 Write it as a plain numbered list.
-Cross-reference their project tech stacks — if they've used a skill in a project but haven't listed it, call that out as something to add rather than a gap.
+Cross-reference their project tech stacks — if they've used a skill in a project but haven't listed it,
+call that out as something to add rather than a gap.
+
+If a SKILL GAP ANALYSIS section is present, treat those gaps as confirmed signal from real application
+outcomes — weight them more heavily than gaps you infer from their profile alone. Call out explicitly
+which gaps are coming from rejected applications versus which are inferred.
 
 ${ctx}`,
 
@@ -56,7 +65,8 @@ ${ctx}`,
   roles: (ctx) => `
 Recommend 5 specific job roles or role variations this developer should be targeting right now.
 
-For each role write two sentences: why it fits this specific person given their skills, experience level, and projects, then what kind of companies or teams typically hire for it.
+For each role write two sentences: why it fits this specific person given their skills, experience level, and projects,
+then what kind of companies or teams typically hire for it.
 Be precise — "early-stage B2B SaaS startup" is better than "tech company".
 Write it as a plain numbered list.
 
@@ -68,43 +78,54 @@ Do a direct portfolio review of this developer's projects in 4 short paragraphs.
 First paragraph: which project is strongest for job applications and exactly why.
 Second paragraph: what is missing across their portfolio — be specific (no README, no tests, not deployed, no description, etc).
 Third paragraph: pick their weakest project and give one specific improvement that would make it worth showing to a hiring manager.
-Fourth paragraph: suggest one new project that would directly fill a visible gap given their target role and current stack — name it, describe it in one sentence, and say which technologies to use.
+Fourth paragraph: suggest one new project that would directly fill a visible gap given their target role and current stack —
+name it, describe it in one sentence, and say which technologies to use. If a SKILL GAP ANALYSIS section is present,
+the suggested project must use at least one of the top gap skills.
 
 Reference their actual project names. Do not be vague.
 
 ${ctx}`,
 };
 
-function buildContext(user: {
-  targetRole:      string | null;
-  experienceLevel: string | null;
-  intentState:     string;
-  location:        string | null;
-  skills: { name: string }[];
-  applications: {
-    company:       string;
-    jobTitle:      string;
-    status:        string;
-    appliedAt:     Date;
-    interviewDate: Date | null;
-    notes:         string | null;
-  }[];
-  workHistory: {
-    company:   string;
-    title:     string;
-    startDate: Date | null;
-    endDate:   Date | null;
-    summary:   string | null;
-  }[];
-  projects: {
-    name:        string;
-    description: string | null;
-    url:         string | null;
-    techStack:   string[];
-    startDate:   Date | null;
-    endDate:     Date | null;
-  }[];
-}): string {
+interface SkillGap {
+  skill: string;
+  frequency: number;
+  jobCount: number;
+}
+
+function buildContext(
+  user: {
+    targetRole:      string | null;
+    experienceLevel: string | null;
+    intentState:     string;
+    location:        string | null;
+    skills: { name: string }[];
+    applications: {
+      company:       string;
+      jobTitle:      string;
+      status:        string;
+      appliedAt:     Date;
+      interviewDate: Date | null;
+      notes:         string | null;
+    }[];
+    workHistory: {
+      company:   string;
+      title:     string;
+      startDate: Date | null;
+      endDate:   Date | null;
+      summary:   string | null;
+    }[];
+    projects: {
+      name:        string;
+      description: string | null;
+      url:         string | null;
+      techStack:   string[];
+      startDate:   Date | null;
+      endDate:     Date | null;
+    }[];
+  },
+  skillGaps: SkillGap[]
+): string {
   const skills = user.skills.map((s) => s.name).join(", ") || "none listed";
 
   const appSummary = user.applications.length === 0
@@ -146,6 +167,20 @@ function buildContext(user: {
                `\n  Status: ${end}`;
       }).join("\n");
 
+  // Skill gap section — only included when data exists
+  const gapSection = skillGaps.length > 0
+    ? `
+SKILL GAP ANALYSIS (derived from rejected/ghosted applications):
+${skillGaps
+  .slice(0, 5)
+  .map((g) =>
+    `- ${g.skill}: missing from ${g.frequency} rejected application${g.frequency !== 1 ? "s" : ""}, ` +
+    `appears in ${g.jobCount} active job${g.jobCount !== 1 ? "s" : ""} in their feed`
+  )
+  .join("\n")}
+`
+    : "";
+
   return `
 USER PROFILE:
 - Target role: ${user.targetRole ?? "not set"}
@@ -169,7 +204,7 @@ ${workSummary}
 
 PROJECTS:
 ${projectSummary}
-`.trim();
+${gapSection}`.trim();
 }
 
 export async function POST(req: Request) {
@@ -181,19 +216,26 @@ export async function POST(req: Request) {
     return Response.json({ error: "Invalid mode" }, { status: 400 });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      skills:       true,
-      applications: { orderBy: { appliedAt: "desc" } },
-      workHistory:  { orderBy: { order: "asc" } },
-      projects:     { orderBy: { order: "asc" } },
-    },
-  });
+  const [user, skillGapReport] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        skills:       true,
+        applications: { orderBy: { appliedAt: "desc" } },
+        workHistory:  { orderBy: { order: "asc" } },
+        projects:     { orderBy: { order: "asc" } },
+      },
+    }),
+    prisma.skillGapReport.findUnique({ where: { userId } }),
+  ]);
 
   if (!user) return Response.json({ error: "User not found" }, { status: 404 });
 
-  const context = buildContext(user);
+  const skillGaps: SkillGap[] = skillGapReport
+    ? (skillGapReport.gaps as unknown as SkillGap[])
+    : [];
+
+  const context = buildContext(user, skillGaps);
   const prompt  = MODE_PROMPTS[mode](context);
 
   const groqRes = await fetch(GROQ_API_URL, {

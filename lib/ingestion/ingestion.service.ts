@@ -1,6 +1,7 @@
 // lib/ingestion/ingestion.service.ts
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { ATSAdapter } from "./base.adapter";
 import { NormalizedJob, IngestResult } from "./types";
 import { extractSkills } from "./utils/skills";
@@ -122,7 +123,7 @@ export class IngestionService {
         employmentType: job.employmentType,
         seniorityLevel: job.seniorityLevel,
         department: job.department,
-        rawData: job.rawData,
+        rawData: job.rawData as Prisma.InputJsonValue,
         isActive: true,
         firstSeenAt: new Date(),
         lastSeenAt: new Date(),

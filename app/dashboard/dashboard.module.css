@@ -134,6 +134,7 @@
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 24px 26px;
+  margin-bottom: 16px;
 }
 
 .cardHeader {
@@ -371,6 +372,68 @@
 .editLink:hover {
   background: var(--surface);
   color: var(--ink-2);
+}
+
+/* Skill gap card */
+.gapList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.gapItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gapSkill {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.gapCount {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 300;
+}
+
+.gapEmptyText {
+  font-size: 13px;
+  color: var(--ink-3);
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.gapProgress {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.gapProgressFill {
+  height: 100%;
+  background: var(--accent-warm);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.gapProgressLabel {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 300;
+  margin: 0;
+}
+
+.gapTimestamp {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 300;
+  margin: 8px 0 0;
 }
 
 /* ── Skills ── */

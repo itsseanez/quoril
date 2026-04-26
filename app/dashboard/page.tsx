@@ -116,7 +116,6 @@ export default async function DashboardPage() {
 
           {/* Left — actions + upcoming interviews */}
           <div className={styles.card}>
-            {/* Upcoming interviews — shown when relevant */}
             {upcomingInterviews.length > 0 && (
               <>
                 <div className={styles.upcomingList}>
